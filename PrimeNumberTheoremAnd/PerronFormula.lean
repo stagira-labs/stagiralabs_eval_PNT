@@ -5,7 +5,6 @@ import PrimeNumberTheoremAnd.ResidueCalcOnRectangles
 import PrimeNumberTheoremAnd.Wiener
 
 set_option lang.lemmaCmd true
-set_option VerifiedAgora.showAxiomUsage true
 open Asymptotics Complex ComplexConjugate Topology Filter Real MeasureTheory Set
 
 open scoped Interval

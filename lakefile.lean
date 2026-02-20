@@ -6,8 +6,8 @@ package «PrimeNumberTheoremAnd» where
     ⟨`pp.unicode.fun, true⟩, -- pretty-prints `fun a ↦ b`
     ⟨`pp.proofs.withType, false⟩,
     ⟨`autoImplicit, false⟩,
-    ⟨`relaxedAutoImplicit, false⟩,
-    ⟨`weak.VerifiedAgora.showAxiomUsage, true⟩
+    ⟨`relaxedAutoImplicit, false⟩
+    -- ⟨`weak.VerifiedAgora.showAxiomUsage, true⟩
   ]
 
 @[default_target]
