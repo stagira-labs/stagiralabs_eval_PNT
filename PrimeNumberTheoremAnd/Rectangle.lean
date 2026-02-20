@@ -71,9 +71,13 @@ theorem Set.ne_left_of_mem_uIoo {a b c : ℝ} (hc : c ∈ Set.uIoo a b) : c ≠ 
 @[target]
 theorem Set.ne_right_of_mem_uIoo {a b c : ℝ} (hc : c ∈ Set.uIoo a b) : c ≠ b := by sorry
 @[target]
-lemma left_mem_rect (z w : ℂ) : z ∈ Rectangle z w := by sorry
+lemma left_mem_rect (z w : ℂ) : z ∈ Rectangle z w := by
+  simp only [Rectangle, Set.mem_prod_eq]
+  exact ⟨by simp, by simp⟩
 @[target]
-lemma right_mem_rect (z w : ℂ) : w ∈ Rectangle z w := by sorry
+lemma right_mem_rect (z w : ℂ) : w ∈ Rectangle z w := by
+  simp only [Rectangle, Set.mem_prod_eq]
+  exact ⟨by simp, by simp⟩
 @[target]
 lemma rect_subset_iff {z w z' w' : ℂ} :
     Rectangle z' w' ⊆ Rectangle z w ↔ z' ∈ Rectangle z w ∧ w' ∈ Rectangle z w := by sorry
