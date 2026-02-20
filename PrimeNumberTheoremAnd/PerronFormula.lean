@@ -5,7 +5,7 @@ import PrimeNumberTheoremAnd.ResidueCalcOnRectangles
 import PrimeNumberTheoremAnd.Wiener
 
 set_option lang.lemmaCmd true
-
+set_option VerifiedAgora.showAxiomUsage true
 open Asymptotics Complex ComplexConjugate Topology Filter Real MeasureTheory Set
 
 open scoped Interval
@@ -78,7 +78,7 @@ lemma verticalIntegral_eq_verticalIntegral {σ σ' : ℝ} {f : ℂ → ℂ}
     (RectangleIntegral_tendsTo_VerticalIntegral hbot htop hleft hright)
   exact integral_boundary_rect_eq_zero_of_differentiableOn f _ _
     (hf.mono fun z hrect ↦ ⟨by simpa using hrect.1, trivial⟩)
-
+@[target]
 lemma verticalIntegral_sub_verticalIntegral_eq_squareIntegral {σ σ' : ℝ} {f : ℂ → ℂ} {p : ℂ}
     (hσ: σ < p.re ∧ p.re < σ') (hf : HolomorphicOn f (Icc σ  σ' ×ℂ univ \ {p}))
     (hbot : Tendsto (fun (y : ℝ) ↦ ∫ (x : ℝ) in σ..σ', f (x + y * I)) atBot (𝓝 0))
@@ -643,7 +643,7 @@ The second case is when $x>1$.
 Here are some auxiliary lemmata for the second case.
 TODO: Move to more general section
 %%-/
-
+@[target]
 theorem HolomorphicOn.upperUIntegral_eq_zero {f : ℂ → ℂ} {σ σ' T : ℝ} (hσ : σ ≤ σ')
     (hf : HolomorphicOn f {z : ℂ | σ ≤ z.re ∧ z.re ≤ σ' ∧ T ≤ z.im})
     (htop : Tendsto (fun y : ℝ ↦ ∫ (x : ℝ) in σ..σ', f (↑x + ↑y * I)) atTop (𝓝 0))
@@ -656,7 +656,7 @@ theorem HolomorphicOn.upperUIntegral_eq_zero {f : ℂ → ℂ} {σ σ' T : ℝ} 
   refine fun _ hTU ↦ hf.vanishesOnRectangle fun _ ↦ ?_
   rw [mem_Rect (by simp [hσ]) (by simp [hTU])]
   simpa using by tauto
-
+@[target]
 theorem HolomorphicOn.lowerUIntegral_eq_zero {f : ℂ → ℂ} {σ σ' T : ℝ} (hσ : σ ≤ σ')
     (hf : HolomorphicOn f {z : ℂ | σ ≤ z.re ∧ z.re ≤ σ' ∧ z.im ≤ -T})
     (hbot : Tendsto (fun (y : ℝ) ↦ ∫ (x : ℝ) in σ..σ', f (x + y * I)) atBot (𝓝 0))
@@ -704,6 +704,7 @@ lemma _root_.Filter.Tendsto.eventually_bddAbove {f : α → β} (hf : Tendsto f 
   obtain ⟨x, hxt, hxy⟩ := hy
   exact hxy ▸ hs x (ht hxt)
 
+@[target]
 lemma bddAbove_square_of_tendsto {f : ℂ → β} {x : ℂ} (hf : Tendsto f (𝓝[≠] x) (𝓝 y)) :
     ∀ᶠ (c : ℝ) in 𝓝[>] 0, BddAbove (f '' (Square x c \ {x})) := by
   obtain ⟨t, htf, ht⟩ := eventually_smallSets.mp hf.eventually_bddAbove
@@ -720,6 +721,7 @@ $$
 is bounded above on the rectangle with corners at $-c-i*c$ and $c+i*c$ (except at $s=0$).
 \end{lemma}
 %%-/
+@[target]
 lemma diffBddAtZero {x : ℝ} (xpos : 0 < x) :
     ∀ᶠ (c : ℝ) in 𝓝[>] 0, BddAbove ((norm ∘ (fun (s : ℂ) ↦ (x : ℂ) ^ s / (s * (s + 1)) - 1 / s)) ''
     (Square 0 c \ {0})) := by
@@ -755,6 +757,7 @@ $$
 is bounded above on the rectangle with corners at $-1-c-i*c$ and $-1+c+i*c$ (except at $s=-1$).
 \end{lemma}
 %%-/
+@[target]
 lemma diffBddAtNegOne {x : ℝ} (xpos : 0 < x) :
     ∀ᶠ (c : ℝ) in 𝓝[>] 0,
     BddAbove ((norm ∘ (fun (s : ℂ) ↦ (x : ℂ) ^ s / (s * (s + 1)) - (-x⁻¹) / (s+1))) ''
@@ -791,6 +794,7 @@ $$
 $$
 \end{lemma}
 %%-/
+@[target]
 lemma residueAtZero (xpos : 0 < x) : ∀ᶠ (c : ℝ) in 𝓝[>] 0,
     RectangleIntegral' (f x) (-c - c * I) (c + c * I) = 1 := by
 /-%%
@@ -833,7 +837,7 @@ $$
 $$
 \end{lemma}
 %%-/
-
+@[target]
 lemma residueAtNegOne (xpos : 0 < x) : ∀ᶠ (c : ℝ) in 𝓝[>] 0,
     RectangleIntegral' (f x) (-c - c * I - 1) (c + c * I - 1) = -x⁻¹ := by
   filter_upwards [Ioo_mem_nhdsGT (by linarith : (0 : ℝ) < 1 / 2), diffBddAtNegOne xpos]
@@ -876,6 +880,7 @@ $$
 $$
 \end{lemma}
 %%-/
+@[target]
 lemma residuePull1 (x_gt_one : 1 < x) (σ_pos : 0 < σ) :
     VerticalIntegral' (f x) σ = 1 + VerticalIntegral' (f x) (-1 / 2) := by
 /-%%
@@ -911,6 +916,7 @@ $$
 $$
 \end{lemma}
 %%-/
+@[target]
 lemma residuePull2 (x_gt_one : 1 < x) :
     VerticalIntegral' (fun s ↦ x ^ s / (s * (s + 1))) (-1 / 2)
     = -1 / x + VerticalIntegral' (fun s ↦ x ^ s / (s * (s + 1))) (-3 / 2) := by
@@ -966,6 +972,7 @@ $$
 $$
 \end{lemma}
 %%-/
+@[target]
 lemma formulaGtOne (x_gt_one : 1 < x) (σ_pos : 0 < σ) :
     VerticalIntegral' (fun s ↦ x^s / (s * (s + 1))) σ = 1 - 1 / x := by
 /-%%

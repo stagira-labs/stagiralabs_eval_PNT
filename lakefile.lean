@@ -6,7 +6,8 @@ package «PrimeNumberTheoremAnd» where
     ⟨`pp.unicode.fun, true⟩, -- pretty-prints `fun a ↦ b`
     ⟨`pp.proofs.withType, false⟩,
     ⟨`autoImplicit, false⟩,
-    ⟨`relaxedAutoImplicit, false⟩
+    ⟨`relaxedAutoImplicit, false⟩,
+    ⟨`weak.VerifiedAgora.showAxiomUsage, true⟩
   ]
 
 @[default_target]
@@ -24,4 +25,3 @@ require mathlib from git
 
 require VerifiedAgora from git
   "https://github.com/stagiralabs/VerifiedAgora.git" @ "sketchyGetTargets"
--- "/Users/ahuja/Desktop/VerifiedAgora"

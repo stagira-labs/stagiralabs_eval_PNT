@@ -5,7 +5,7 @@
    "type": "git",
    "subDir": null,
    "scope": "",
-   "rev": "e00cdec9e2e47c3a277a2dde77d0b87d709909de",
+   "rev": "8f2dfe86d9934a60ef25431edb6e7c337db8be74",
    "name": "VerifiedAgora",
    "manifestFile": "lake-manifest.json",
    "inputRev": "sketchyGetTargets",
