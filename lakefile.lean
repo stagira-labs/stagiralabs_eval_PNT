@@ -19,6 +19,3 @@ lean_lib «PrimeNumberTheoremAnd»
 --
 require mathlib from git
   "https://github.com/leanprover-community/mathlib4.git" @ "v4.17.0"
-
-meta if get_config? env = some "dev" then require «doc-gen4» from git
-  "https://github.com/leanprover/doc-gen4.git" @ "v4.17.0"
