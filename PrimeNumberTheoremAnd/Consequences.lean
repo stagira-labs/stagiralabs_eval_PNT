@@ -5,6 +5,7 @@ import Mathlib.Analysis.Asymptotics.Lemmas
 import Mathlib.NumberTheory.AbelSummation
 import Mathlib.NumberTheory.PrimeCounting
 import Mathlib.Analysis.Asymptotics.AsymptoticEquivalent
+import VerifiedAgora.tagger
 
 set_option lang.lemmaCmd true
 
@@ -1838,6 +1839,7 @@ Let $p_n$ denote the $n^{th}$ prime.
 as $n \to \infty$.
 \end{proposition}
 %%-/
+@[target]
 theorem pn_asymptotic : ∃ c : ℕ → ℝ, c =o[atTop] (fun _ ↦ (1:ℝ)) ∧
     ∀ n : ℕ, Nat.nth Nat.Prime n = (1 + c n) * n * log n := by
   sorry
@@ -1856,6 +1858,7 @@ We have $p_{n+1} - p_n = o(p_n)$
 \end{corollary}
 %%-/
 
+@[target]
 theorem pn_pn_plus_one : ∃ c : ℕ → ℝ, c =o[atTop] (fun _ ↦ (1:ℝ)) ∧
     ∀ n : ℕ, Nat.nth Nat.Prime (n+1) - Nat.nth Nat.Prime n = (c n) * Nat.nth Nat.Prime n := by
   use (fun n => (Nat.nth Nat.Prime (n+1) - Nat.nth Nat.Prime n) / Nat.nth Nat.Prime n)
@@ -2055,6 +2058,7 @@ For every $\eps>0$, there is a prime between $x$ and $(1+\eps)x$ for all suffici
 \end{corollary}
 %%-/
 
+@[target]
 theorem prime_between {ε:ℝ} (hε: 0 < ε): ∀ᶠ x:ℝ in atTop, ∃ p:ℕ, Nat.Prime p ∧
     x < p ∧ p < (1+ε)* x := by
   sorry
@@ -2158,6 +2162,7 @@ From M\"obius inversion $1_{n=1} = \sum_{d|n} \mu(d)$ and summing we have
 \end{proposition}
 %%-/
 
+@[target]
 theorem mu_pnt : (fun x:ℝ ↦ ∑ n ∈ range ⌊ x ⌋₊, μ n) =o[atTop] (fun x ↦ x) := by sorry
 
 /-%%
@@ -2193,6 +2198,7 @@ We have $\sum_{n \leq x} \lambda(n) = o(x)$.
 \end{proposition}
 %%-/
 
+@[target]
 theorem lambda_pnt : (fun x:ℝ ↦ ∑ n ∈ range ⌊ x ⌋₊, (-1)^(Ω n)) =o[atTop] (fun x ↦ x) := by
   sorry
 
@@ -2218,6 +2224,7 @@ Sending $\eps \to 0$ we obtain the claim.
 \end{proposition}
 %%-/
 
+@[target]
 theorem mu_pnt_alt : (fun x:ℝ ↦ ∑ n ∈ range ⌊ x ⌋₊, (μ n: ℝ) / n) =o[atTop] (fun x ↦ (1:ℝ)) := by sorry
 
 /-%%

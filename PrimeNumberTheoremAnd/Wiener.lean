@@ -18,6 +18,7 @@ import Mathlib.Topology.UniformSpace.UniformConvergence
 import Mathlib.MeasureTheory.Measure.Haar.Disintegration
 import Mathlib.NumberTheory.MulChar.Lemmas
 import Mathlib.Tactic
+import VerifiedAgora.tagger
 
 import PrimeNumberTheoremAnd.Fourier
 import PrimeNumberTheoremAnd.BrunTitchmarsh
@@ -2206,6 +2207,7 @@ $$ \sum_{n=1}^\infty \frac{f(n)}{n} \hat \psi( \frac{1}{2\pi} \log \frac{n}{x} )
 \end{lemma}
 %%-/
 
+@[target]
 lemma limiting_fourier_variant
     (hpos: 0 ≤ f)
     (hG: ContinuousOn G {s | 1 ≤ s.re})
@@ -2231,6 +2233,7 @@ for all $x \geq 1$.
 \end{corollary}
 %%-/
 
+@[target]
 lemma crude_upper_bound
     (hpos: 0 ≤ f)
     (hG: ContinuousOn G {s | 1 ≤ s.re})
@@ -2253,6 +2256,7 @@ for all $x \geq 1$.
 \end{corollary}
 %%-/
 
+@[target]
 lemma auto_cheby (hpos: 0 ≤ f) (hf : ∀ (σ' : ℝ), 1 < σ' → Summable (nterm f σ'))
     (hG: ContinuousOn G {s | 1 ≤ s.re})
     (hG' : Set.EqOn G (fun s ↦ LSeries f s - A / (s - 1)) {s | 1 < s.re}) : cheby f := by
@@ -2274,6 +2278,7 @@ $$ \sum_{n\leq x} f(n) = A x + o(x).$$
 \end{corollary}
 %%-/
 
+@[target]
 theorem WienerIkeharaTheorem'' (hpos : 0 ≤ f) (hf : ∀ (σ' : ℝ), 1 < σ' → Summable (nterm f σ'))
     (hG : ContinuousOn F {s | 1 ≤ s.re})
     (hG' : Set.EqOn F (fun s ↦ LSeries f s - A / (s - 1)) {s | 1 < s.re}) :

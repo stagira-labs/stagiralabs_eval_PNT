@@ -2,6 +2,7 @@ import PrimeNumberTheoremAnd.Auxiliary
 import Mathlib.Analysis.MellinInversion
 import PrimeNumberTheoremAnd.PerronFormula
 import Mathlib.Algebra.GroupWithZero.Units.Basic
+import VerifiedAgora.tagger
 
 open scoped ContDiff
 
@@ -326,6 +327,7 @@ to
 $$\frac{1}{2\pi i}\int_{(\sigma)}\frac{t^s}{s(s+1)}x^{-s}ds = 1 - x / t.$$
 \end{lemma}
 %%-/
+@[target]
 lemma PerronInverseMellin_gt {t x : ℝ} (xpos : 0 < x) (x_lt_t : x < t) {σ : ℝ} (σpos : 0 < σ) :
     MellinInverseTransform (Perron.f t) σ x = 1 - x / t := by
   dsimp [MellinInverseTransform]

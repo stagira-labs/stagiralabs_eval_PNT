@@ -19,3 +19,9 @@ lean_lib «PrimeNumberTheoremAnd»
 --
 require mathlib from git
   "https://github.com/leanprover-community/mathlib4.git" @ "v4.17.0"
+
+
+
+require VerifiedAgora from git
+  "https://github.com/stagiralabs/VerifiedAgora.git" @ "sketchyGetTargets"
+-- "/Users/ahuja/Desktop/VerifiedAgora"
