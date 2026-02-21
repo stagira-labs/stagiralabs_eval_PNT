@@ -62,7 +62,9 @@ lemma mem_Rect {z w : ℂ} (zRe_lt_wRe : z.re ≤ w.re) (zIm_lt_wIm : z.im ≤ w
     p ∈ Rectangle z w ↔ z.re ≤ p.re ∧ p.re ≤ w.re ∧ z.im ≤ p.im ∧ p.im ≤ w.im := by
   simp only [Rectangle, mem_reProdIm, uIcc_of_le zRe_lt_wRe, uIcc_of_le zIm_lt_wIm, Set.mem_Icc, and_assoc]
 @[target]
-lemma square_neg (p : ℂ) (c : ℝ) : Square p (-c) = Square p c := by sorry
+lemma square_neg (p : ℂ) (c : ℝ) : Square p (-c) = Square p c := by
+  simp [Square, Rectangle.symm, show (-c : ℂ) = -(↑c) by norm_cast, show (c : ℂ) = ↑c by rfl]
+  ring_nf
 @[target]
 theorem Set.left_not_mem_uIoo {a b : ℝ} : a ∉ Set.uIoo a b := by sorry
 @[target]
