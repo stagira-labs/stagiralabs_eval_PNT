@@ -63,13 +63,37 @@ lemma mem_Rect {z w : ℂ} (zRe_lt_wRe : z.re ≤ w.re) (zIm_lt_wIm : z.im ≤ w
 @[target]
 lemma square_neg (p : ℂ) (c : ℝ) : Square p (-c) = Square p c := by sorry
 @[target]
-theorem Set.left_not_mem_uIoo {a b : ℝ} : a ∉ Set.uIoo a b := by sorry
+theorem Set.left_not_mem_uIoo {a b : ℝ} : a ∉ Set.uIoo a b := by
+  by_cases h : a ≤ b
+  · rw [Set.uIoo_of_le h]
+    exact Set.left_mem_Ioo.1
+  · rw [Set.uIoo_of_not_le h]
+    exact Set.right_mem_Ioo.1
 @[target]
-theorem Set.right_not_mem_uIoo {a b : ℝ} : b ∉ Set.uIoo a b := by sorry
+theorem Set.right_not_mem_uIoo {a b : ℝ} : b ∉ Set.uIoo a b := by
+  by_cases h : a ≤ b
+  · rw [Set.uIoo_of_le h]
+    exact Set.right_mem_Ioo.1
+  · rw [Set.uIoo_of_not_le h]
+    exact Set.left_mem_Ioo.1
 @[target]
-theorem Set.ne_left_of_mem_uIoo {a b c : ℝ} (hc : c ∈ Set.uIoo a b) : c ≠ a := by sorry
+theorem Set.ne_left_of_mem_uIoo {a b c : ℝ} (hc : c ∈ Set.uIoo a b) : c ≠ a := by
+  by_cases h : a ≤ b
+  · rw [Set.uIoo_of_le h] at hc
+    have : a < c := (Set.mem_Ioo.mp hc).1
+    exact (ne_of_lt this).symm
+  · rw [Set.uIoo_of_not_le h] at hc
+    have : c < a := (Set.mem_Ioo.mp hc).2
+    exact ne_of_lt this
 @[target]
-theorem Set.ne_right_of_mem_uIoo {a b c : ℝ} (hc : c ∈ Set.uIoo a b) : c ≠ b := by sorry
+theorem Set.ne_right_of_mem_uIoo {a b c : ℝ} (hc : c ∈ Set.uIoo a b) : c ≠ b := by
+  by_cases h : a ≤ b
+  · rw [Set.uIoo_of_le h] at hc
+    have : c < b := (Set.mem_Ioo.mp hc).2
+    exact ne_of_lt this
+  · rw [Set.uIoo_of_not_le h] at hc
+    have : b < c := (Set.mem_Ioo.mp hc).1
+    exact (ne_of_lt this).symm
 @[target]
 lemma left_mem_rect (z w : ℂ) : z ∈ Rectangle z w := by sorry
 @[target]
