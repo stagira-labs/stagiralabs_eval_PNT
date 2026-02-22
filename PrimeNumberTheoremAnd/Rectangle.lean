@@ -61,7 +61,9 @@ lemma rectangle_in_convex {U : Set ℂ} (U_convex : Convex ℝ U) {z w : ℂ} (h
 lemma mem_Rect {z w : ℂ} (zRe_lt_wRe : z.re ≤ w.re) (zIm_lt_wIm : z.im ≤ w.im) (p : ℂ) :
     p ∈ Rectangle z w ↔ z.re ≤ p.re ∧ p.re ≤ w.re ∧ z.im ≤ p.im ∧ p.im ≤ w.im := by sorry
 @[target]
-lemma square_neg (p : ℂ) (c : ℝ) : Square p (-c) = Square p c := by sorry
+lemma square_neg (p : ℂ) (c : ℝ) : Square p (-c) = Square p c := by
+  unfold Square Rectangle
+  simp [uIcc_comm, add_assoc]
 @[target]
 theorem Set.left_not_mem_uIoo {a b : ℝ} : a ∉ Set.uIoo a b := by
   unfold Set.uIoo
@@ -95,7 +97,11 @@ lemma left_mem_rect (z w : ℂ) : z ∈ Rectangle z w := by
   · exact left_mem_uIcc
   · exact left_mem_uIcc
 @[target]
-lemma right_mem_rect (z w : ℂ) : w ∈ Rectangle z w := by sorry
+lemma right_mem_rect (z w : ℂ) : w ∈ Rectangle z w := by
+  unfold Rectangle
+  constructor
+  · exact right_mem_uIcc
+  · exact right_mem_uIcc
 @[target]
 lemma rect_subset_iff {z w z' w' : ℂ} :
     Rectangle z' w' ⊆ Rectangle z w ↔ z' ∈ Rectangle z w ∧ w' ∈ Rectangle z w := by sorry
