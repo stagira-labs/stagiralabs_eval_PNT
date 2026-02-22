@@ -39,7 +39,8 @@ lemma Square_apply (p : ℂ) (cpos : c > 0) :
     Square p c = Icc (-c + p.re) (c + p.re) ×ℂ Icc (-c + p.im) (c + p.im) := by sorry
 @[target, simp]
 theorem preimage_equivRealProdCLM_reProdIm (s t : Set ℝ) :
-    equivRealProdCLM.symm ⁻¹' (s ×ℂ t) = s ×ˢ t := by sorry
+    equivRealProdCLM.symm ⁻¹' (s ×ℂ t) = s ×ˢ t := by
+  rfl
 @[target, simp]
 theorem ContinuousLinearEquiv.coe_toLinearEquiv_symm {R : Type*} {S : Type*} [Semiring R] [Semiring S] {σ : R →+* S}
     {σ' : S →+* R} [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] (M : Type*) [TopologicalSpace M]
@@ -100,9 +101,15 @@ theorem Set.ne_right_of_mem_uIoo {a b c : ℝ} (hc : c ∈ Set.uIoo a b) : c ≠
     simp [hb] at hc
     nlinarith
 @[target]
-lemma left_mem_rect (z w : ℂ) : z ∈ Rectangle z w := by sorry
+lemma left_mem_rect (z w : ℂ) : z ∈ Rectangle z w := by
+  constructor
+  · exact left_mem_uIcc
+  · exact left_mem_uIcc
 @[target]
-lemma right_mem_rect (z w : ℂ) : w ∈ Rectangle z w := by sorry
+lemma right_mem_rect (z w : ℂ) : w ∈ Rectangle z w := by
+  constructor
+  · exact right_mem_uIcc
+  · exact right_mem_uIcc
 @[target]
 lemma rect_subset_iff {z w z' w' : ℂ} :
     Rectangle z' w' ⊆ Rectangle z w ↔ z' ∈ Rectangle z w ∧ w' ∈ Rectangle z w := by sorry
