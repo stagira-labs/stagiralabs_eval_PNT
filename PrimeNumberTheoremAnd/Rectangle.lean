@@ -71,9 +71,11 @@ theorem Set.ne_left_of_mem_uIoo {a b c : ℝ} (hc : c ∈ Set.uIoo a b) : c ≠ 
 @[target]
 theorem Set.ne_right_of_mem_uIoo {a b c : ℝ} (hc : c ∈ Set.uIoo a b) : c ≠ b := by sorry
 @[target]
-lemma left_mem_rect (z w : ℂ) : z ∈ Rectangle z w := by sorry
+lemma left_mem_rect (z w : ℂ) : z ∈ Rectangle z w := by
+  simp [Rectangle, mem_reProdIm]
 @[target]
-lemma right_mem_rect (z w : ℂ) : w ∈ Rectangle z w := by sorry
+lemma right_mem_rect (z w : ℂ) : w ∈ Rectangle z w := by
+  simp [Rectangle, mem_reProdIm]
 @[target]
 lemma rect_subset_iff {z w z' w' : ℂ} :
     Rectangle z' w' ⊆ Rectangle z w ↔ z' ∈ Rectangle z w ∧ w' ∈ Rectangle z w := by sorry
@@ -87,7 +89,21 @@ lemma RectSubRect' {z₀ z₁ z₂ z₃ : ℂ} (x₀_le_x₁ : z₀.re ≤ z₁.
     (y₂_le_y₃ : z₂.im ≤ z₃.im) :
     Rectangle z₁ z₂ ⊆ Rectangle z₀ z₃ := by sorry
 @[target]
-lemma rectangleBorder_subset_rectangle (z w : ℂ) : RectangleBorder z w ⊆ Rectangle z w := by sorry
+lemma rectangleBorder_subset_rectangle (z w : ℂ) : RectangleBorder z w ⊆ Rectangle z w := by
+  simp only [RectangleBorder, Rectangle, Set.union_subset_iff]
+  refine ⟨⟨⟨?_, ?_⟩, ?_⟩, ?_⟩
+  · intro p hp
+    simp [mem_reProdIm] at hp ⊢
+    exact ⟨hp.1, hp.2 ▸ left_mem_uIcc⟩
+  · intro p hp
+    simp [mem_reProdIm] at hp ⊢
+    exact ⟨hp.1 ▸ left_mem_uIcc, hp.2⟩
+  · intro p hp
+    simp [mem_reProdIm] at hp ⊢
+    exact ⟨hp.1, hp.2 ▸ right_mem_uIcc⟩
+  · intro p hp
+    simp [mem_reProdIm] at hp ⊢
+    exact ⟨hp.1 ▸ right_mem_uIcc, hp.2⟩
 /-- Note: try using `by simp` for `h`. -/
 @[target]
 lemma rectangle_disjoint_singleton {z w p : ℂ}
