@@ -62,7 +62,10 @@ lemma rectangle_in_convex {U : Set ℂ} (U_convex : Convex ℝ U) {z w : ℂ} (h
     Rectangle z w ⊆ U := by sorry
 @[target]
 lemma mem_Rect {z w : ℂ} (zRe_lt_wRe : z.re ≤ w.re) (zIm_lt_wIm : z.im ≤ w.im) (p : ℂ) :
-    p ∈ Rectangle z w ↔ z.re ≤ p.re ∧ p.re ≤ w.re ∧ z.im ≤ p.im ∧ p.im ≤ w.im := by sorry
+    p ∈ Rectangle z w ↔ z.re ≤ p.re ∧ p.re ≤ w.re ∧ z.im ≤ p.im ∧ p.im ≤ w.im := by
+  simp only [Rectangle, Complex.mem_reProdIm, Set.uIcc_of_le zRe_lt_wRe,
+             Set.uIcc_of_le zIm_lt_wIm, Set.mem_Icc]
+  tauto
 @[target]
 lemma square_neg (p : ℂ) (c : ℝ) : Square p (-c) = Square p c := by
   simp only [Square]
@@ -97,7 +100,14 @@ lemma right_mem_rect (z w : ℂ) : w ∈ Rectangle z w := by
   exact ⟨right_mem_uIcc, right_mem_uIcc⟩
 @[target]
 lemma rect_subset_iff {z w z' w' : ℂ} :
-    Rectangle z' w' ⊆ Rectangle z w ↔ z' ∈ Rectangle z w ∧ w' ∈ Rectangle z w := by sorry
+    Rectangle z' w' ⊆ Rectangle z w ↔ z' ∈ Rectangle z w ∧ w' ∈ Rectangle z w := by
+  constructor
+  · intro h
+    exact ⟨h (Complex.mem_reProdIm.mpr ⟨Set.left_mem_uIcc, Set.left_mem_uIcc⟩),
+           h (Complex.mem_reProdIm.mpr ⟨Set.right_mem_uIcc, Set.right_mem_uIcc⟩)⟩
+  · intro ⟨hz', hw'⟩ p hp
+    simp only [Rectangle, Complex.mem_reProdIm] at *
+    exact ⟨Set.uIcc_subset_uIcc hz'.1 hw'.1 hp.1, Set.uIcc_subset_uIcc hz'.2 hw'.2 hp.2⟩
 @[target]
 lemma RectSubRect {x₀ x₁ x₂ x₃ y₀ y₁ y₂ y₃ : ℝ} (x₀_le_x₁ : x₀ ≤ x₁) (x₁_le_x₂ : x₁ ≤ x₂)
     (x₂_le_x₃ : x₂ ≤ x₃) (y₀_le_y₁ : y₀ ≤ y₁) (y₁_le_y₂ : y₁ ≤ y₂) (y₂_le_y₃ : y₂ ≤ y₃) :
