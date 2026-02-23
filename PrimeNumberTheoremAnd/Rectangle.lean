@@ -39,7 +39,10 @@ lemma Square_apply (p : ℂ) (cpos : c > 0) :
     Square p c = Icc (-c + p.re) (c + p.re) ×ℂ Icc (-c + p.im) (c + p.im) := by sorry
 @[target, simp]
 theorem preimage_equivRealProdCLM_reProdIm (s t : Set ℝ) :
-    equivRealProdCLM.symm ⁻¹' (s ×ℂ t) = s ×ˢ t := by sorry
+    equivRealProdCLM.symm ⁻¹' (s ×ℂ t) = s ×ˢ t := by
+  ext ⟨a, b⟩
+  simp [Complex.mem_reProdIm, Complex.equivRealProdCLM_symm_apply_re,
+        Complex.equivRealProdCLM_symm_apply_im]
 @[target, simp]
 theorem ContinuousLinearEquiv.coe_toLinearEquiv_symm {R : Type*} {S : Type*} [Semiring R] [Semiring S] {σ : R →+* S}
     {σ' : S →+* R} [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] (M : Type*) [TopologicalSpace M]
@@ -61,7 +64,11 @@ lemma rectangle_in_convex {U : Set ℂ} (U_convex : Convex ℝ U) {z w : ℂ} (h
 lemma mem_Rect {z w : ℂ} (zRe_lt_wRe : z.re ≤ w.re) (zIm_lt_wIm : z.im ≤ w.im) (p : ℂ) :
     p ∈ Rectangle z w ↔ z.re ≤ p.re ∧ p.re ≤ w.re ∧ z.im ≤ p.im ∧ p.im ≤ w.im := by sorry
 @[target]
-lemma square_neg (p : ℂ) (c : ℝ) : Square p (-c) = Square p c := by sorry
+lemma square_neg (p : ℂ) (c : ℝ) : Square p (-c) = Square p c := by
+  simp only [Square]
+  rw [show (-↑(-c) - ↑(-c) * I + p : ℂ) = ↑c + ↑c * I + p from by push_cast; ring,
+      show (↑(-c) + ↑(-c) * I + p : ℂ) = -↑c - ↑c * I + p from by push_cast; ring]
+  exact Rectangle.symm
 @[target]
 theorem Set.left_not_mem_uIoo {a b : ℝ} : a ∉ Set.uIoo a b := by
   simp only [Set.uIoo, Set.mem_Ioo, inf_eq_min, sup_eq_max]
@@ -81,9 +88,13 @@ theorem Set.ne_left_of_mem_uIoo {a b c : ℝ} (hc : c ∈ Set.uIoo a b) : c ≠ 
 theorem Set.ne_right_of_mem_uIoo {a b c : ℝ} (hc : c ∈ Set.uIoo a b) : c ≠ b := by
   intro h; subst h; exact Set.right_not_mem_uIoo hc
 @[target]
-lemma left_mem_rect (z w : ℂ) : z ∈ Rectangle z w := by sorry
+lemma left_mem_rect (z w : ℂ) : z ∈ Rectangle z w := by
+  rw [Rectangle.eq_1, Complex.mem_reProdIm]
+  exact ⟨left_mem_uIcc, left_mem_uIcc⟩
 @[target]
-lemma right_mem_rect (z w : ℂ) : w ∈ Rectangle z w := by sorry
+lemma right_mem_rect (z w : ℂ) : w ∈ Rectangle z w := by
+  rw [Rectangle.eq_1, Complex.mem_reProdIm]
+  exact ⟨right_mem_uIcc, right_mem_uIcc⟩
 @[target]
 lemma rect_subset_iff {z w z' w' : ℂ} :
     Rectangle z' w' ⊆ Rectangle z w ↔ z' ∈ Rectangle z w ∧ w' ∈ Rectangle z w := by sorry
