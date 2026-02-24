@@ -120,12 +120,25 @@ lemma rect_subset_iff {z w z' w' : ℂ} :
 @[target]
 lemma RectSubRect {x₀ x₁ x₂ x₃ y₀ y₁ y₂ y₃ : ℝ} (x₀_le_x₁ : x₀ ≤ x₁) (x₁_le_x₂ : x₁ ≤ x₂)
     (x₂_le_x₃ : x₂ ≤ x₃) (y₀_le_y₁ : y₀ ≤ y₁) (y₁_le_y₂ : y₁ ≤ y₂) (y₂_le_y₃ : y₂ ≤ y₃) :
-    Rectangle (x₁ + y₁ * I) (x₂ + y₂ * I) ⊆ Rectangle (x₀ + y₀ * I) (x₃ + y₃ * I) := by sorry
+    Rectangle (x₁ + y₁ * I) (x₂ + y₂ * I) ⊆ Rectangle (x₀ + y₀ * I) (x₃ + y₃ * I) := by
+  intro p hp
+  simp only [Rectangle, mem_reProdIm, ofReal_re, ofReal_im, add_re, mul_re, I_re, mul_zero,
+    I_im, mul_one, sub_self, add_zero, add_im, mul_im, zero_add] at hp ⊢
+  exact ⟨uIcc_subset_uIcc (mem_uIcc.mpr (Or.inl ⟨x₀_le_x₁, le_trans x₁_le_x₂ x₂_le_x₃⟩))
+           (mem_uIcc.mpr (Or.inl ⟨le_trans x₀_le_x₁ x₁_le_x₂, x₂_le_x₃⟩)) hp.1,
+         uIcc_subset_uIcc (mem_uIcc.mpr (Or.inl ⟨y₀_le_y₁, le_trans y₁_le_y₂ y₂_le_y₃⟩))
+           (mem_uIcc.mpr (Or.inl ⟨le_trans y₀_le_y₁ y₁_le_y₂, y₂_le_y₃⟩)) hp.2⟩
 @[target]
 lemma RectSubRect' {z₀ z₁ z₂ z₃ : ℂ} (x₀_le_x₁ : z₀.re ≤ z₁.re) (x₁_le_x₂ : z₁.re ≤ z₂.re)
     (x₂_le_x₃ : z₂.re ≤ z₃.re) (y₀_le_y₁ : z₀.im ≤ z₁.im) (y₁_le_y₂ : z₁.im ≤ z₂.im)
     (y₂_le_y₃ : z₂.im ≤ z₃.im) :
-    Rectangle z₁ z₂ ⊆ Rectangle z₀ z₃ := by sorry
+    Rectangle z₁ z₂ ⊆ Rectangle z₀ z₃ := by
+  intro p hp
+  simp only [Rectangle, mem_reProdIm] at hp ⊢
+  exact ⟨uIcc_subset_uIcc (mem_uIcc.mpr (Or.inl ⟨x₀_le_x₁, le_trans x₁_le_x₂ x₂_le_x₃⟩))
+           (mem_uIcc.mpr (Or.inl ⟨le_trans x₀_le_x₁ x₁_le_x₂, x₂_le_x₃⟩)) hp.1,
+         uIcc_subset_uIcc (mem_uIcc.mpr (Or.inl ⟨y₀_le_y₁, le_trans y₁_le_y₂ y₂_le_y₃⟩))
+           (mem_uIcc.mpr (Or.inl ⟨le_trans y₀_le_y₁ y₁_le_y₂, y₂_le_y₃⟩)) hp.2⟩
 @[target]
 lemma rectangleBorder_subset_rectangle (z w : ℂ) : RectangleBorder z w ⊆ Rectangle z w := by
   simp only [RectangleBorder, Rectangle, Set.union_subset_iff]
