@@ -123,7 +123,12 @@ lemma rectangle_disjoint_singleton {z w p : ℂ}
 @[target]
 lemma rectangleBorder_disjoint_singleton {z w p : ℂ}
     (h : p.re ≠ z.re ∧ p.re ≠ w.re ∧ p.im ≠ z.im ∧ p.im ≠ w.im) :
-    Disjoint (RectangleBorder z w) {p} := by sorry
+    Disjoint (RectangleBorder z w) {p} := by
+  obtain ⟨hre_z, hre_w, him_z, him_w⟩ := h
+  rw [Set.disjoint_singleton_right]
+  simp only [RectangleBorder, mem_union, mem_reProdIm, mem_singleton_iff]
+  push_neg
+  refine ⟨⟨⟨fun _ => him_z, fun hre => absurd hre hre_z⟩, fun _ => him_w⟩, fun hre => absurd hre hre_w⟩
 @[target]
 lemma rectangle_subset_punctured_rect {z₀ z₁ z₂ z₃ p : ℂ}
     (hz : z₀.re ≤ z₁.re ∧ z₁.re ≤ z₂.re ∧ z₂.re ≤ z₃.re ∧
@@ -144,34 +149,34 @@ lemma rectangle_mem_nhds_iff {z w p : ℂ} : Rectangle z w ∈ nhds p ↔
 lemma mapsTo_rectangle_left_re (z w : ℂ) :
     MapsTo (fun (y : ℝ) => ↑z.re + ↑y * I) (uIcc z.im w.im) (Rectangle z w) := by
   intro y hy
-  simp only [Rectangle, mem_reProdIm, Complex.add_re, Complex.ofReal_re, Complex.mul_re,
-             Complex.ofReal_im, Complex.I_re, mul_zero, sub_zero, Complex.add_im,
-             Complex.mul_im, mul_one, zero_add, Complex.I_im, add_zero]
-  exact ⟨left_mem_uIcc, hy⟩
+  refine mem_reProdIm.mpr ?_
+  constructor
+  · simp [Rectangle]
+  · simp; exact hy
 @[target]
 lemma mapsTo_rectangle_right_re (z w : ℂ) :
     MapsTo (fun (y : ℝ) => ↑w.re + ↑y * I) (uIcc z.im w.im) (Rectangle z w) := by
   intro y hy
-  simp only [Rectangle, mem_reProdIm, Complex.add_re, Complex.ofReal_re, Complex.mul_re,
-             Complex.ofReal_im, Complex.I_re, mul_zero, sub_zero, Complex.add_im,
-             Complex.mul_im, mul_one, zero_add, Complex.I_im, add_zero]
-  exact ⟨right_mem_uIcc, hy⟩
+  refine mem_reProdIm.mpr ?_
+  constructor
+  · simp [Rectangle]
+  · simp; exact hy
 @[target]
 lemma mapsTo_rectangle_left_im (z w : ℂ) :
     MapsTo (fun (x : ℝ) => ↑x + z.im * I) (uIcc z.re w.re) (Rectangle z w) := by
   intro x hx
-  simp only [Rectangle, mem_reProdIm, Complex.add_re, Complex.ofReal_re, Complex.mul_re,
-             Complex.ofReal_im, Complex.I_re, mul_zero, sub_zero, Complex.add_im,
-             Complex.mul_im, mul_one, zero_add, Complex.I_im, add_zero]
-  exact ⟨hx, left_mem_uIcc⟩
+  refine mem_reProdIm.mpr ?_
+  constructor
+  · simp; exact hx
+  · simp [Rectangle]
 @[target]
 lemma mapsTo_rectangle_right_im (z w : ℂ) :
     MapsTo (fun (x : ℝ) => ↑x + w.im * I) (uIcc z.re w.re) (Rectangle z w) := by
   intro x hx
-  simp only [Rectangle, mem_reProdIm, Complex.add_re, Complex.ofReal_re, Complex.mul_re,
-             Complex.ofReal_im, Complex.I_re, mul_zero, sub_zero, Complex.add_im,
-             Complex.mul_im, mul_one, zero_add, Complex.I_im, add_zero]
-  exact ⟨hx, right_mem_uIcc⟩
+  refine mem_reProdIm.mpr ?_
+  constructor
+  · simp; exact hx
+  · simp [Rectangle]
 @[target]
 lemma mapsTo_rectangleBorder_left_re (z w : ℂ) :
     MapsTo (fun (y : ℝ) => ↑z.re + ↑y * I) (uIcc z.im w.im) (RectangleBorder z w) := by
@@ -180,7 +185,7 @@ lemma mapsTo_rectangleBorder_left_re (z w : ℂ) :
              Complex.add_re, Complex.ofReal_re, Complex.mul_re, Complex.ofReal_im,
              Complex.I_re, mul_zero, sub_zero, Complex.add_im, Complex.mul_im,
              mul_one, zero_add, Complex.I_im, add_zero]
-  exact Or.inl (Or.inl (Or.inr ⟨trivial, hy⟩))
+  left; left; right; exact ⟨trivial, hy⟩
 @[target]
 lemma mapsTo_rectangleBorder_right_re (z w : ℂ) :
     MapsTo (fun (y : ℝ) => ↑w.re + ↑y * I) (uIcc z.im w.im) (RectangleBorder z w) := by
@@ -189,7 +194,7 @@ lemma mapsTo_rectangleBorder_right_re (z w : ℂ) :
              Complex.add_re, Complex.ofReal_re, Complex.mul_re, Complex.ofReal_im,
              Complex.I_re, mul_zero, sub_zero, Complex.add_im, Complex.mul_im,
              mul_one, zero_add, Complex.I_im, add_zero]
-  exact Or.inr ⟨trivial, hy⟩
+  right; exact ⟨trivial, hy⟩
 @[target]
 lemma mapsTo_rectangleBorder_left_im (z w : ℂ) :
     MapsTo (fun (x : ℝ) => ↑x + z.im * I) (uIcc z.re w.re) (RectangleBorder z w) := by
@@ -198,7 +203,7 @@ lemma mapsTo_rectangleBorder_left_im (z w : ℂ) :
              Complex.add_re, Complex.ofReal_re, Complex.mul_re, Complex.ofReal_im,
              Complex.I_re, mul_zero, sub_zero, Complex.add_im, Complex.mul_im,
              mul_one, zero_add, Complex.I_im, add_zero]
-  exact Or.inl (Or.inl (Or.inl ⟨hx, trivial⟩))
+  left; left; left; exact ⟨hx, trivial⟩
 @[target]
 lemma mapsTo_rectangleBorder_right_im (z w : ℂ) :
     MapsTo (fun (x : ℝ) => ↑x + w.im * I) (uIcc z.re w.re) (RectangleBorder z w) := by
@@ -207,19 +212,39 @@ lemma mapsTo_rectangleBorder_right_im (z w : ℂ) :
              Complex.add_re, Complex.ofReal_re, Complex.mul_re, Complex.ofReal_im,
              Complex.I_re, mul_zero, sub_zero, Complex.add_im, Complex.mul_im,
              mul_one, zero_add, Complex.I_im, add_zero]
-  exact Or.inl (Or.inr ⟨hx, trivial⟩)
+  left; right; exact ⟨hx, trivial⟩
 @[target]
 lemma mapsTo_rectangle_left_re_NoP (z w : ℂ) {p : ℂ} (pNotOnBorder : p ∉ RectangleBorder z w) :
-    MapsTo (fun (y : ℝ) => ↑z.re + ↑y * I) (uIcc z.im w.im) (Rectangle z w \ {p}) := by sorry
+    MapsTo (fun (y : ℝ) => ↑z.re + ↑y * I) (uIcc z.im w.im) (Rectangle z w \ {p}) := by
+  intro y hy
+  refine ⟨mapsTo_rectangle_left_re z w hy, ?_⟩
+  simp only [Set.mem_singleton_iff]
+  intro h
+  exact pNotOnBorder (h ▸ mapsTo_rectangleBorder_left_re z w hy)
 @[target]
 lemma mapsTo_rectangle_right_re_NoP (z w : ℂ) {p : ℂ} (pNotOnBorder : p ∉ RectangleBorder z w) :
-    MapsTo (fun (y : ℝ) => ↑w.re + ↑y * I) (uIcc z.im w.im) (Rectangle z w \ {p}) := by sorry
+    MapsTo (fun (y : ℝ) => ↑w.re + ↑y * I) (uIcc z.im w.im) (Rectangle z w \ {p}) := by
+  intro y hy
+  refine ⟨mapsTo_rectangle_right_re z w hy, ?_⟩
+  simp only [Set.mem_singleton_iff]
+  intro h
+  exact pNotOnBorder (h ▸ mapsTo_rectangleBorder_right_re z w hy)
 @[target]
 lemma mapsTo_rectangle_left_im_NoP (z w : ℂ) {p : ℂ} (pNotOnBorder : p ∉ RectangleBorder z w) :
-    MapsTo (fun (x : ℝ) => ↑x + z.im * I) (uIcc z.re w.re) (Rectangle z w \ {p}) := by sorry
+    MapsTo (fun (x : ℝ) => ↑x + z.im * I) (uIcc z.re w.re) (Rectangle z w \ {p}) := by
+  intro x hx
+  refine ⟨mapsTo_rectangle_left_im z w hx, ?_⟩
+  simp only [Set.mem_singleton_iff]
+  intro h
+  exact pNotOnBorder (h ▸ mapsTo_rectangleBorder_left_im z w hx)
 @[target]
 lemma mapsTo_rectangle_right_im_NoP (z w : ℂ) {p : ℂ} (pNotOnBorder : p ∉ RectangleBorder z w) :
-    MapsTo (fun (x : ℝ) => ↑x + w.im * I) (uIcc z.re w.re) (Rectangle z w \ {p}) := by sorry
+    MapsTo (fun (x : ℝ) => ↑x + w.im * I) (uIcc z.re w.re) (Rectangle z w \ {p}) := by
+  intro x hx
+  refine ⟨mapsTo_rectangle_right_im z w hx, ?_⟩
+  simp only [Set.mem_singleton_iff]
+  intro h
+  exact pNotOnBorder (h ▸ mapsTo_rectangleBorder_right_im z w hx)
 @[target]
 theorem not_mem_rectangleBorder_of_rectangle_mem_nhds {z w p : ℂ} (hp : Rectangle z w ∈ nhds p) :
     p ∉ RectangleBorder z w := by sorry
