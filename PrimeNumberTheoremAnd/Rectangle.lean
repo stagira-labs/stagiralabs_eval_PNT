@@ -2,9 +2,7 @@ import Mathlib.Analysis.Complex.CauchyIntegral
 import Mathlib.Analysis.Complex.Convex
 import VerifiedAgora.tagger
 
-open Complex Set Topology
-
-open scoped Interval
+open Complex Set
 
 variable {z w : ℂ} {c : ℝ}
 
@@ -73,24 +71,47 @@ lemma square_neg (p : ℂ) (c : ℝ) : Square p (-c) = Square p c := by
  
  
  
-  rw [show -↑(-c) - ↑(-c) * I + p = ↑c + ↑c * I + p by push_cast; ring,
+ 
+ 
+  rw [show -↑(-c) - ↑(-c) * I + p = ↑c + ↑c
+  rw [show -↑(-c) - ↑(-c) * I + p = ↑c + ↑c *
       show ↑(-c) + ↑(-c) * I + p = -↑c - ↑c *
   exact Rectangle.symm
 @[target]
 theorem Set.
 @[target]
+theorem Set.left_not_
+@[target]
+theorem Set.left_not_mem_uIoo {a b
 theorem Set.left_not_mem_uIoo {a b 
+theor
 theorem 
-theorem Set.left_not_mem_uIoo {a b : ℝ} : a ∉
+theorem Set.left_not_mem_uIoo {a b : ℝ} :
   rcases le_or_lt a b with h | h
+  · rw [u
   · rw [uIoo_of_le h]; exact left_mem_Ioo
-  · rw [uIoo_of_gt h]; exact right_mem_Ioo.mp
+  · rw [uIoo_of_gt h]; exact right_mem_Ioo
+@[target]
+theorem Set.right_not_mem_uIoo
 @[target]
 theorem Set.right_not_mem_uIoo {a 
 theore
 
 theore
+theorem Set.right_not_mem_uIoo {a
+the
+
+theore
+theorem Set.right_not_mem_uIoo {a
+theore
+
+theore
 theorem Set.right_not_mem_uIoo {a b : ℝ} : b
+
+theorem Set.right_not_mem_uIoo {a b : ℝ} : b
+  rcases le_or_lt a b with h | h
+  · r
+  rc
   rcases le_or_lt a b with h | h
   · r
   rcases le_or_lt a b with h | h
@@ -100,10 +121,15 @@ theorem Set.right_not_mem_uIoo {a b : ℝ} : b
 @[target]
   · rw [uIoo_of_gt h]; exact left_mem_Ioo
 @[target]
+theorem Set.ne_left_of_mem_uIoo {a b
+@[target]
 theorem Set.ne_left_of_mem_uIoo {a b c : ℝ
   fun h => Set.left_not_mem_uI
 theorem Set.ne_left_of_mem_uIoo {a b c : ℝ
   fun h => Set.left_not_mem_uIoo (h ▸ hc)
+
+@[target]
+theor
 
 @[target]
 theorem Set.ne_right_of_mem_uIoo {a b c :
@@ -116,15 +142,22 @@ theorem Set.ne_right_of_mem_uIoo {a b c : ℝ} (hc : c ∈ Set.uIoo a b) : c ≠
   f
   fun h => Set.right_not_mem_uIoo (h ▸ hc)
 @[tar
+  fun
+  f
+@[tar
+  fun
+  fun h => Set.right_not_mem_uIoo (h ▸ hc)
+@[tar
   fun h => Set.right_not_mem_uIoo (h ▸ hc)
 @[target]
 lemma left_mem_rect (z w : ℂ) : z ∈ Rectangle z w :=
 @[target]
 lemma rect_subs
-lemma left_mem_rect (z w : ℂ) : z ∈ Rectangle z w :=
+lemma left_mem_rect (z w : ℂ) : z ∈ Rec
 @[target]
 lemma rect_subset_iff {z w z' w' : ℂ} :
     Rectangle z' w
+    Rectangle z' w' ⊆ Rectangle z w ↔ z
     Rectangle z' w' ⊆ Rectangle z w ↔ z' ∈ Rectangle z w ∧ w' ∈ Rectangle z w := by
   constructor
   · intro h
@@ -133,8 +166,9 @@ lemma rect_subset_iff {z w z' w' : ℂ} :
 
   · intro ⟨hz', hw'⟩ x hx
     simp only [Rectangle, mem_reProdIm] at hx hz' hw' ⊢
-    exact ⟨Set.uIcc_subset_uIcc hz'.1 hw'.1 hx.1, Set.uIcc_subset_uIcc hz'.2 hw'.2 hx.2⟩
+    exact ⟨Set.uIcc_subset_uIcc hz'.1 hw'.1 h
 @[target]
+lemma RectSubRect {x₀ x₁ x₂ x
 lemma RectSubRect {x₀ x₁ x₂ x₃ y₀ y₁ y₂ y₃ : ℝ} (x₀_le_x₁ 
     (x₂_le_x₃ : x₂ ≤ x₃) (y₀_le_y₁ : y₀ ≤ y₁) (y₁_le_y₂ : 
     Rectangle (x₁ + y₁ * I) (x₂ + y₂ * I) ⊆ Rectangle (x₀ + y₀ * I) (x₃ + y₃ * I) := by
@@ -145,9 +179,9 @@ lemma RectSubRect {x₀ x₁ x₂ x₃ y₀ y₁ y₂ y₃ : ℝ} (x₀_le_x₁
   constructor
   · constructor
     · exact Set.mem_uIcc_of_le (by linarith) (by linarith)
-    · exact Set.mem_uIcc_of_le (by lina
+    · exact Set.mem
   · constructor
-    · exact Set.mem_uIcc_of_le (by linarith) (by linarith)
+    · exact Set.mem_uIcc_of_le (by linarith) 
     · exact Set.mem_uIcc_of_le (by linarith) (by linarith)
 @[target]
 lemma RectSubRect' {z₀ z₁ z₂ z₃ : ℂ} (x₀_le_x₁ : z₀.re ≤ z₁.re) (x₁_le_x₂ : z₁.re ≤ z₂.re)
@@ -156,11 +190,11 @@ lemma RectSubRect' {z₀ z₁ z₂ z₃ : ℂ} (x₀_le_x₁ : z₀.re ≤ z₁.
     Rectangle z₁ z₂ ⊆ Rectangle z₀ z₃ := by
   rw [rect_subset_iff]
   simp only [Rectangle, mem_reProdIm]
-  exact ⟨⟨Set.mem_uIcc_of_le (by linarith) (by linarith),
+  exact ⟨⟨Set.mem_uIcc_of_le (by linarith
 
           Set.mem_uIcc_of_le (by linar
       
-          Set.mem_uIcc_of_le (by linarith) (by linarith)⟩,
+          Set.mem_u
          ⟨Set.mem_uIcc_of_le (by linarith) (by linarith),
           Set.mem_uIcc_of_le (by linarith) (by linarith)⟩⟩
 @[target]
@@ -168,39 +202,120 @@ lemma RectSubRect {x₀ x₁ x₂ x₃ y₀ y₁ y₂ y₃ : ℝ} (x₀_le_x₁ 
     (x₂_le_x₃ : x₂ ≤ x₃) (y₀_le_y₁ : y₀ ≤ y₁) (y₁_le_y₂ : y₁ ≤ y₂) (y₂_le_y₃ : y₂ ≤ y₃) :
     Rectangle (x₁ + y₁ * I) (x₂ + y₂ * I) ⊆ Rectangle (x₀ + y₀ * I) (x₃ + y₃ * I) := by
   rw [rect_subset_iff]
+  simp only [Rectangle, 
   simp only [Rectangle, mem_reProdIm, Complex.add_re, Complex.mul_re, Complex.ofReal_re,
     Complex.I_re, mul_zero, sub_zero, C
     Complex.mul_im, zero_mul]
   constructor
   · constructor
    
-    · exact Set.mem_uIc
-    ·
-    · exact Set.mem_uIc
-    · exact Set.mem_uIcc_of_le (by linarith) (by linarith)
-    · exact Set.mem_uIcc_of_le (by linarith) (by linarith)
-  · constructor
-    · exact Set.mem_uIcc_of_le (by linarith) (by linarith)
-    · exact Set.mem_uIcc_of_le (by linarith) (by linarith)
+
 @[target]
-lemma RectSubRect' {z₀ z₁ z₂ z₃ : ℂ} (x₀_le_x₁ : z₀.re ≤ z₁.re) (x₁_le_x₂ : z₁.re ≤ z₂.re)
-    (x₂_le_x₃ : z₂.re ≤ z₃.re) (y₀_le_y₁ 
-    (y₂_le_y₃ : z₂.im ≤ z₃.im) :
-    Rectangl
-    Rectangle z₁ z₂ ⊆ Rectangle z₀ z₃ := by
-  rw [rect_subset_i
+lemma mapsTo_rectangle_left_re (z w : ℂ) :
+    MapsTo (fun (y : ℝ) => ↑z.re + ↑y * I) (uIcc z.im w.im) (Rectangle z w) := by
+  intro y hy
+  simp only [Rectangle, mem_reProdIm, Complex.add_re, Complex.ofReal_re, Complex.mul_re,
+             Complex.ofReal_im, Complex.I_re, mul_zero, sub_zero, Complex.add_im,
+             Complex.mul_im, mul_one, zero_add, Complex.I_im, add_zero]
+  exact ⟨left_mem_uIcc, hy⟩
+@[target]
+lemma mapsTo_rectangle_right_re (z w : ℂ) :
+    MapsTo (fun (y : ℝ) => ↑w.re + ↑y * I) (uIcc z.im w.im) (Rectangle z w) := by
+  intro y hy
+  simp only [Rectangle, mem_reProdIm, Complex.add_re, Complex.ofReal_re, Complex.mul_re,
+             Complex.ofReal_im, Complex.I_re, mul_zero, sub_zero, Complex.add_im,
+             Complex.mul_im, mul_one, zero_add, Complex.I_im, add_zero]
+  exact ⟨right_mem_uIcc, hy⟩
+@[target]
+lemma mapsTo_rectangle_left_im (z w : ℂ) :
+    MapsTo (fun (x : ℝ) => ↑x + z.im * I) (uIcc z.re w.re) (Rectangle z w) := by
+  intro x hx
+  simp only [Rectangle, mem_reProdIm, Complex.add_re, Complex.ofReal_re, Complex.mul_re,
+             Complex.ofReal_im, Complex.I_re, mul_zero, sub_zero, Complex.add_im,
+             Complex.mul_im, mul_one, zero_add, Complex.I_im, add_zero]
+  exact ⟨hx, left_mem_uIcc⟩
+@[target]
+lemma mapsTo_rectangle_right_im (z w : ℂ) :
+    MapsTo (fun (x : ℝ) => ↑x + w.im * I) (uIcc z.re w.re) (Rectangle z w) := by
+  intro x hx
+  simp only [Rectangle, mem_reProdIm, Complex.add_re, Complex.ofReal_re, Complex.mul_re,
+             Complex.ofReal_im, Complex.I_re, mul_zero, sub_zero, Complex.add_im,
+             Complex.mul_im, mul_one, zero_add, Complex.I_im, add_zero]
+  exact ⟨hx, right_mem_uIcc⟩
+@[target]
+lemma mapsTo_rectangleBorder_left_re (z w : ℂ) :
+    MapsTo (fun (y : ℝ) => ↑z.re + ↑y * I) (uIcc z.im w.im) (RectangleBorder z w) := by
+  intro y hy
+  simp only [RectangleBorder, mem_union, mem_reProdIm, mem_singleton_iff,
+             Complex.add_re, Complex.ofReal_re, Complex.mul_re, Complex.ofReal_im,
+             Complex.I_re, mul_zero, sub_zero, Complex.add_im, Complex.mul_im,
+             mul_one, zero_add, Complex.I_im, add_zero]
+  exact Or.inl (Or.inl (Or.inr ⟨trivial, hy⟩))
+@[target]
+lemma mapsTo_rectangleBorder_right_re (z w : ℂ) :
+    MapsTo (fun (y : ℝ) => ↑w.re + ↑y * I) (uIcc z.im w.im) (RectangleBorder z w) := by
+  intro y hy
+  simp only [RectangleBorder, mem_union, mem_reProdIm, mem_singleton_iff,
+             Complex.add_re, Complex.ofReal_re, Complex.mul_re, Complex.ofReal_im,
+             Complex.I_re, mul_zero, sub_zero, Complex.add_im, Complex.mul_im,
+             mul_one, zero_add, Complex.I_im, add_zero]
+  exact Or.inr ⟨trivial, hy⟩
+@[target]
+lemma mapsTo_rectangleBorder_left_im (z w : ℂ) :
+    MapsTo (fun (x : ℝ) => ↑x + z.im * I) (uIcc z.re w.re) (RectangleBorder z w) := by
+  intro x hx
+  simp only [RectangleBorder, mem_union, mem_reProdIm, mem_singleton_iff,
+             Complex.add_re, Complex.ofReal_re, Complex.mul_re, Complex.ofReal_im,
+             Complex.I_re, mul_zero, sub_zero, Complex.add_im, Complex.mul_im,
+             mul_one, zero_add, Complex.I_im, add_zero]
+  exact Or.inl (Or.inl (Or.inl ⟨hx, trivial⟩))
+@[target]
+lemma mapsTo_rectangleBorder_right_im (z w : ℂ) :
+    MapsTo (fun (x : ℝ) => ↑x + w.im * I) (uIcc z.re w.re) (RectangleBorder z w) := by
+  intro x hx
+  simp only [RectangleBorder, mem_union, mem_reProdIm, mem_singleton_iff,
+             Complex.add_re, Complex.ofReal_re, Complex.mul_re, Complex.ofReal_im,
+             Complex.I_re, mul_zero, sub_zero, Complex.add_im, Complex.mul_im,
+             mul_one, zero_add, Complex.I_im, add_zero]
+  exact Or.inl (Or.inr ⟨hx, trivial⟩)
   simp only [Rectangle, mem_reProdIm]
+  exact ⟨⟨Set.mem_uIcc_of_l
+  simp only [Rectangle, mem_reProdIm]
+  exact ⟨⟨Set.mem_uIcc_of_le (by linarith) (b
+@[targe
   exact ⟨⟨Set.mem_uIcc_of_le (by linarith) (b
 @[target]
 lemma rectangleBorder_disjoint_singleton {z w p : ℂ}
+    (h : p.re ≠ z.re ∧
+lemma rectangle
+    (h : p.re ≠ z.re ∧
+lemma rectangleBorder_disjoint_singleton {z w p : ℂ}
     (h : p.re ≠ z.re ∧ p.re ≠ w.re ∧ p.im ≠ z.im ∧ p.im ≠ w.im) :
+    Disjoint (RectangleB
     Disjoint (RectangleBorder z w) {p} := by
+  rw [Set.disjoint_singleton_right]
+  i
   rw [Set.disjoint_singleton_right]
   intro hp
 
   intro hp
+  simp only [RectangleBorde
+  rw [Set.disjoint_singleton_right]
+  intro hp
+
+  intro hp
+  simp only [RectangleBorde
+  intro hp
+  simp only [RectangleBorder, mem_union, mem_reProdIm, mem_singleton_iff
+  intro hp
+  simp onl
+  intro hp
   simp only [RectangleBorder, mem_union, mem_reProdIm, mem_singleton_iff] at hp
-  obtain ⟨hre_z, hre_w, him_z, him_w⟩ := h
+  obtain ⟨hre_z, hre_w, him_z, h
+  rcases hp with ((
+ 
+  rcases hp with ((
+  · ex
   rcases hp with ((
  
   rcases hp with ((
@@ -208,87 +323,11 @@ lemma rectangleBorder_disjoint_singleton {z w p : ℂ}
  
   · exact him_z him
   · exact hre_z hre
-  · exact him_w him
-  · exact hre_w hre
-@[t
+
+  · exact
+  · exact him_z him
+ 
   · exact him_z him
   · exact hre_z hre
   · exact him_w him
-  · exact hre_w hre
-@[target]
-lemma rectangle_subset_punctured_re
-  · exact hre_w hre
-@[target]
-lemma rectangle_subset_punctured_rect {z₀ z₁ z₂ z₃ p : ℂ}
-    (hz : z₀.re ≤ z₁.re ∧ 
-    (hz : z₀.re ≤ z₁.re ∧ z₁.re ≤ z₂.re ∧ z₂.re ≤ z₃.re ∧
-      z₀.im ≤ z₁.im ∧ z₁.im ≤ z₂.im ∧ z₂.im ≤ z₃.im)
-    (hp : (p.re < z₁.re ∧ p.re < z₂.re) ∨ (p.im < z₁.im ∧ p.im < z₂.im) ∨
-      (z₁.
-      (z₁.re < p.re ∧ z₂.re < p.re) ∨ (z₁.im < p.im ∧ z₂.im < p.im)) :
-    Rectangle z₁ z₂ ⊆ Rectangle z₀ z₃ \ {
-  obt
-  obtain ⟨h01, h12, h23, h01', h12', h23'⟩ := hz
-  rw [Set.subset_diff]
-  exact ⟨Rect
-  obtain ⟨h01, h12, h23, h01', h12', h23'⟩ := hz
-  rw [Set.subset_diff]
-  exact ⟨RectSubRect' h01 h12 h23 h01' h12' h23',
-         recta
-         rectangle_disjoin
-         recta
-         rectangle_disjoint_singleton hp⟩
-@[target]
-lemma rectangleBorder_subset_punctured_rect {z₀ z₁ z₂ z₃ p : ℂ}
-    (hz : z₀.re 
-lemma rectangleBorder_subset_punctured_rect {z₀ z₁ z₂ z₃ p : ℂ}
-    (hz : z₀.re ≤ z₁.
-    (hz : z₀.re ≤ z₁.re ∧ z₁.re ≤ z₂.re ∧ z₂.re ≤ z₃.re ∧
-      z₀.im ≤ z₁.im ∧ z₁.im ≤ z₂
-      z₀.im ≤ z₁.im ∧ z₁.im ≤ z₂.im ∧ z₂.im ≤ z₃.im)
-    (hp : p.re ≠ z₁.re ∧ p.re ≠ z₂.re ∧ p.im ≠ z₁.im ∧ p.im ≠ z₂.im) :
-    RectangleB
-    RectangleBorder z₁ z₂ ⊆ Rectangle z₀ z₃ \ {p} := by
-  obtain ⟨h01, h12, 
-    RectangleBorder z₁ z₂ ⊆ Rectangle z₀ z₃ \ {p} := by
-  obtain ⟨h01, h12, h23, h01', h12', h23'⟩ := h
-  rw [Set.subset_diff]
-  exact ⟨(rectangleBorder_subset_rectangle z₁ z₂).trans
-     
-  exac
-  exact ⟨(rectangleBorder_subset_rectangle z₁ z₂).trans
-     
-  exact ⟨(rectangleBorder_subset_rectangle z₁ z₂).trans
-           (RectSubRect' h01 h12 h
-           (RectSubRect' h01 h12 h23 h01' h12' h23'),
-         r
-         rectangleBorder_disjoint_singleton hp⟩
-      (z.re < p.re ∧ w.re
-         rectang
-      (z.re < p.re ∧ w.re
-         rectangleBorder_disjoint_singleton hp⟩
-      (z.re < p.re ∧ w.re < p.re) ∨ (z.
-    Disjoint (Rectangle z w) {p} := by
-  rw [Set.disjoint_singleton_right]
-  simp onl
-  rw 
-  rw [Set.disjoint_singleton_right]
-  sim
-  simp onl
-  rw 
-  rw [Set.disjoint_singleton_rig
-  simp onl
-  rw [Set.disjoint_singleton_right]
-  simp only [Rectangle, mem_
-  simp only [Rectangle, me
-  simp only [Rectangle, mem_
-  simp only [Rectangle, mem_reProdIm, not_and_or]
-  rcases h with (⟨h1, h2⟩ | ⟨h1, h2
-  rcases h with (⟨h1, h2⟩ | ⟨h1, h2⟩ | ⟨h1, h2⟩ | ⟨h1,
-  rcases h with (⟨h1, h2⟩ | ⟨h1, h2⟩ | ⟨h1, h2⟩ | ⟨h1, h2⟩)
-  · left; exact Set.not_mem_uIcc_of_lt h1 h2
-  · right; exact Set
-  · right; exact Set.not_mem_uIcc_of_lt h1 
-  · r
-  · right; exact Set.not_mem_uIcc_of_lt h1 
-  · right; exact Se
+ 
