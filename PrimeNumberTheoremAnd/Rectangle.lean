@@ -34,27 +34,108 @@ def Square (p : ℂ) (c : ℝ) : Set ℂ := Rectangle (-c - c * I + p) (c + c * 
 
 @[target]
 lemma Square_apply (p : ℂ) (cpos : c > 0) :
-    Square p c = Icc (-c + p.re) (c + p.re) ×ℂ Icc (-c + p.im) (c + p.im) := by sorry
+    Square p c = Icc (-c + p.re) (c + p.re) ×ℂ Icc (-c + p.im) (c + p.im) := by
+  simp only [Square, Rectangle]
+  have h1 : (-↑c - ↑c * I + p).re = -c + p.re := by
+    simp [Complex.add_re, Complex.sub_re, Complex.mul_re, Complex.ofReal_re,
+          Complex.I_re, Complex.I_im]
+  have h2 : (↑c + ↑c * I + p).re = c + p.re := by
+    simp [Complex.add_re, Complex.mul_re, Complex.ofReal_re, Complex.I_re, Complex.I_im]
+  have h3 : (-↑c - ↑c * I + p).im = -c + p.im := by
+    simp [Complex.add_im, Complex.sub_im, Complex.mul_im, Complex.ofReal_im,
+          Complex.I_re, Complex.I_im]
+  have h4 : (↑c + ↑c * I + p).im = c + p.im := by
+    simp [Complex.add_im, Complex.mul_im, Complex.ofReal_im, Complex.I_re, Complex.I_im]
+  rw [h1, h2, h3, h4, Set.uIcc_of_le (by linarith), Set.uIcc_of_le (by linarith)]
 @[target, simp]
 theorem preimage_equivRealProdCLM_reProdIm (s t : Set ℝ) :
-    equivRealProdCLM.symm ⁻¹' (s ×ℂ t) = s ×ˢ t := by sorry
+    equivRealProdCLM.symm ⁻¹' (s ×ℂ t) = s ×ˢ t := by
+  ext ⟨x, y⟩
+  simp only [Set.mem_preimage, mem_reProdIm, equivRealProdCLM_symm_apply, Set.mem_prod,
+    Complex.add_re, Complex.ofReal_re, Complex.mul_re, Complex.ofReal_im, Complex.I_re, mul_zero,
+    sub_zero, Complex.add_im, Complex.mul_im, mul_one, zero_add, Complex.I_im, add_zero]
 @[target, simp]
 theorem ContinuousLinearEquiv.coe_toLinearEquiv_symm {R : Type*} {S : Type*} [Semiring R] [Semiring S] {σ : R →+* S}
     {σ' : S →+* R} [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] (M : Type*) [TopologicalSpace M]
     [AddCommMonoid M] {M₂ : Type*} [TopologicalSpace M₂] [AddCommMonoid M₂] [Module R M]
     [Module S M₂] (e : M ≃SL[σ] M₂) :
-    ⇑e.toLinearEquiv.symm = e.symm := by sorry
+    ⇑e.toLinearEquiv.symm = e.symm := by rfl
 /-- The axis-parallel complex rectangle with opposite corners `z` and `w` is complex product
   of two intervals, which is also the convex hull of the four corners. Golfed from mathlib4\#9598.-/
 @[target]
 lemma segment_reProdIm_segment_eq_convexHull (z w : ℂ) :
-    uIcc z.re w.re ×ℂ uIcc z.im w.im = convexHull ℝ {z, z.re + w.im * I, w.re + z.im * I, w} := by sorry
+    uIcc z.re w.re ×ℂ uIcc z.im w.im = convexHull ℝ {z, z.re + w.im * I, w.re + z.im * I, w} := by
+  apply Set.eq_of_subset_of_subset
+  · intro p hp
+    rw [mem_reProdIm] at hp
+    obtain ⟨hp_re, hp_im⟩ := hp
+    rw [← segment_eq_uIcc, segment_eq_image] at hp_im hp_re
+    obtain ⟨t, ht, ht_eq⟩ := hp_im
+    obtain ⟨s, hs, hs_eq⟩ := hp_re
+    simp only [smul_eq_mul] at ht_eq hs_eq
+    have hconv := convex_convexHull ℝ {z, z.re + w.im * I, w.re + z.im * I, w}
+    have h_z : z ∈ convexHull ℝ {z, z.re + w.im * I, w.re + z.im * I, w} :=
+      subset_convexHull ℝ _ (mem_insert z _)
+    have h_zw : z.re + w.im * I ∈ convexHull ℝ {z, z.re + w.im * I, w.re + z.im * I, w} :=
+      subset_convexHull ℝ _ (by simp)
+    have h_wz : w.re + z.im * I ∈ convexHull ℝ {z, z.re + w.im * I, w.re + z.im * I, w} :=
+      subset_convexHull ℝ _ (by simp)
+    have h_w : w ∈ convexHull ℝ {z, z.re + w.im * I, w.re + z.im * I, w} :=
+      subset_convexHull ℝ _ (by simp)
+    have hq1 : (↑z.re + ↑p.im * I) ∈ convexHull ℝ {z, z.re + w.im * I, w.re + z.im * I, w} :=
+      hconv.segment_subset h_z h_zw (by
+        rw [segment_eq_image]; exact ⟨t, ht, Complex.ext
+          (by simp [smul_re, smul_eq_mul, add_re, mul_re, ofReal_re, I_re, ofReal_im, I_im]; ring)
+          (by simp [smul_im, smul_eq_mul, add_im, mul_im, ofReal_re, I_im, ofReal_im, I_re]; linarith)⟩)
+    have hq2 : (↑w.re + ↑p.im * I) ∈ convexHull ℝ {z, z.re + w.im * I, w.re + z.im * I, w} :=
+      hconv.segment_subset h_wz h_w (by
+        rw [segment_eq_image]; exact ⟨t, ht, Complex.ext
+          (by simp [smul_re, smul_eq_mul, add_re, mul_re, ofReal_re, I_re, ofReal_im, I_im]; ring)
+          (by simp [smul_im, smul_eq_mul, add_im, mul_im, ofReal_re, I_im, ofReal_im, I_re]; linarith)⟩)
+    apply hconv.segment_subset hq1 hq2
+    rw [segment_eq_image]
+    exact ⟨s, hs, Complex.ext
+      (by simp [smul_re, smul_eq_mul, add_re, mul_re, ofReal_re, I_re, ofReal_im, I_im]; linarith)
+      (by simp [smul_im, smul_eq_mul, add_im, mul_im, ofReal_re, I_im, ofReal_im, I_re]; ring)⟩
+  · apply convexHull_min
+    · intro p hp
+      simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hp
+      rcases hp with rfl | rfl | rfl | rfl
+      · simp [mem_reProdIm, left_mem_uIcc]
+      · simp [mem_reProdIm, left_mem_uIcc, right_mem_uIcc]
+      · simp [mem_reProdIm, right_mem_uIcc, left_mem_uIcc]
+      · simp [mem_reProdIm, right_mem_uIcc]
+    · intro x hx y hy a b ha hb hab
+      simp only [mem_reProdIm] at *
+      simp only [add_re, smul_re, add_im, smul_im]
+      exact ⟨(convex_uIcc z.re w.re) hx.1 hy.1 ha hb hab,
+             (convex_uIcc z.im w.im) hx.2 hy.2 ha hb hab⟩
 /-- If the four corners of a rectangle are contained in a convex set `U`, then the whole
   rectangle is. Golfed from mathlib4\#9598.-/
 @[target]
 lemma rectangle_in_convex {U : Set ℂ} (U_convex : Convex ℝ U) {z w : ℂ} (hz : z ∈ U)
     (hw : w ∈ U) (hzw : (z.re + w.im * I) ∈ U) (hwz : (w.re + z.im * I) ∈ U) :
-    Rectangle z w ⊆ U := by sorry
+    Rectangle z w ⊆ U := by
+  intro p hp
+  rw [Rectangle, mem_reProdIm] at hp
+  obtain ⟨hp_re, hp_im⟩ := hp
+  rw [← segment_eq_uIcc, segment_eq_image] at hp_im hp_re
+  obtain ⟨t, ht, ht_eq⟩ := hp_im
+  obtain ⟨s, hs, hs_eq⟩ := hp_re
+  simp only [smul_eq_mul] at ht_eq hs_eq
+  have hq1 : (↑z.re + ↑p.im * I) ∈ U := U_convex.segment_subset hz hzw (by
+    rw [segment_eq_image]; exact ⟨t, ht, Complex.ext
+      (by simp [smul_re, smul_eq_mul, add_re, mul_re, ofReal_re, I_re, ofReal_im, I_im]; ring)
+      (by simp [smul_im, smul_eq_mul, add_im, mul_im, ofReal_re, I_im, ofReal_im, I_re]; linarith)⟩)
+  have hq2 : (↑w.re + ↑p.im * I) ∈ U := U_convex.segment_subset hwz hw (by
+    rw [segment_eq_image]; exact ⟨t, ht, Complex.ext
+      (by simp [smul_re, smul_eq_mul, add_re, mul_re, ofReal_re, I_re, ofReal_im, I_im]; ring)
+      (by simp [smul_im, smul_eq_mul, add_im, mul_im, ofReal_re, I_im, ofReal_im, I_re]; linarith)⟩)
+  apply U_convex.segment_subset hq1 hq2
+  rw [segment_eq_image]
+  exact ⟨s, hs, Complex.ext
+    (by simp [smul_re, smul_eq_mul, add_re, mul_re, ofReal_re, I_re, ofReal_im, I_im]; linarith)
+    (by simp [smul_im, smul_eq_mul, add_im, mul_im, ofReal_re, I_im, ofReal_im, I_re]; ring)⟩
 @[target]
 lemma mem_Rect {z w : ℂ} (zRe_lt_wRe : z.re ≤ w.re) (zIm_lt_wIm : z.im ≤ w.im) (p : ℂ) :
     p ∈ Rectangle z w ↔ z.re ≤ p.re ∧ p.re ≤ w.re ∧ z.im ≤ p.im ∧ p.im ≤ w.im := by
@@ -174,7 +255,9 @@ lemma rectangleBorder_subset_punctured_rect {z₀ z₁ z₂ z₃ p : ℂ}
          rectangleBorder_disjoint_singleton hp⟩
 @[target]
 lemma rectangle_mem_nhds_iff {z w p : ℂ} : Rectangle z w ∈ nhds p ↔
-    p ∈ (Set.uIoo z.re w.re) ×ℂ (Set.uIoo z.im w.im) := by sorry
+    p ∈ (Set.uIoo z.re w.re) ×ℂ (Set.uIoo z.im w.im) := by
+  rw [← mem_interior_iff_mem_nhds, Rectangle, interior_reProdIm]
+  simp only [uIcc, uIoo, interior_Icc]
 @[target]
 lemma mapsTo_rectangle_left_re (z w : ℂ) :
     MapsTo (fun (y : ℝ) => ↑z.re + ↑y * I) (uIcc z.im w.im) (Rectangle z w) := by
@@ -277,18 +360,72 @@ lemma mapsTo_rectangle_right_im_NoP (z w : ℂ) {p : ℂ} (pNotOnBorder : p ∉ 
   exact pNotOnBorder (h ▸ mapsTo_rectangleBorder_right_im z w hx)
 @[target]
 theorem not_mem_rectangleBorder_of_rectangle_mem_nhds {z w p : ℂ} (hp : Rectangle z w ∈ nhds p) :
-    p ∉ RectangleBorder z w := by sorry
-@[target]
-theorem Complex.nhds_hasBasis_square (p : ℂ) : (nhds p).HasBasis (0 < ·) (Square p ·) := by sorry
+    p ∉ RectangleBorder z w := by
+  rw [rectangle_mem_nhds_iff] at hp
+  simp only [mem_reProdIm] at hp
+  obtain ⟨hp_re, hp_im⟩ := hp
+  exact Set.disjoint_singleton_right.mp (rectangleBorder_disjoint_singleton
+    ⟨Set.ne_left_of_mem_uIoo hp_re, Set.ne_right_of_mem_uIoo hp_re,
+     Set.ne_left_of_mem_uIoo hp_im, Set.ne_right_of_mem_uIoo hp_im⟩)
 @[target]
 lemma square_mem_nhds (p : ℂ) {c : ℝ} (hc : c ≠ 0) :
-    Square p c ∈ nhds p := by sorry
+    Square p c ∈ nhds p := by
+  rw [Square, rectangle_mem_nhds_iff, mem_reProdIm]
+  simp only [Complex.add_re, Complex.sub_re, Complex.neg_re, Complex.mul_re, Complex.ofReal_re,
+    Complex.I_re, Complex.I_im, mul_zero, sub_zero, Complex.add_im, Complex.sub_im,
+    Complex.neg_im, Complex.mul_im, mul_one, zero_add, Complex.ofReal_im, add_zero, neg_mul,
+    neg_neg, mul_comm, neg_zero, zero_sub]
+  rcases lt_or_gt_of_ne hc with hc | hc
+  · constructor
+    · rw [uIoo_of_gt (by linarith : c + p.re < -c + p.re)]
+      exact Set.mem_Ioo.mpr ⟨by linarith, by linarith⟩
+    · rw [uIoo_of_gt (by linarith : c + p.im < -c + p.im)]
+      exact Set.mem_Ioo.mpr ⟨by linarith, by linarith⟩
+  · constructor
+    · rw [uIoo_of_le (by linarith : -c + p.re ≤ c + p.re)]
+      exact Set.mem_Ioo.mpr ⟨by linarith, by linarith⟩
+    · rw [uIoo_of_le (by linarith : -c + p.im ≤ c + p.im)]
+      exact Set.mem_Ioo.mpr ⟨by linarith, by linarith⟩
+@[target]
+theorem Complex.nhds_hasBasis_square (p : ℂ) : (nhds p).HasBasis (0 < ·) (Square p ·) := by
+  constructor
+  intro U
+  constructor
+  · intro hU
+    rw [Metric.mem_nhds_iff] at hU
+    obtain ⟨ε, hε, hεU⟩ := hU
+    refine ⟨ε / 2, by linarith, fun x hx => hεU ?_⟩
+    rw [Metric.mem_ball]
+    rw [Square_apply p (by linarith : ε / 2 > 0), mem_reProdIm] at hx
+    obtain ⟨hx_re, hx_im⟩ := hx
+    rw [Set.mem_Icc] at hx_re hx_im
+    rw [Complex.dist_eq, Complex.norm_def]
+    rw [show ε = Real.sqrt (ε ^ 2) from (Real.sqrt_sq hε.le).symm]
+    apply Real.sqrt_lt_sqrt (normSq_nonneg _)
+    simp only [Complex.normSq_apply, Complex.sub_re, Complex.sub_im]
+    have h1 : (x.re - p.re) ^ 2 ≤ (ε / 2) ^ 2 := by nlinarith [hx_re.1, hx_re.2]
+    have h2 : (x.im - p.im) ^ 2 ≤ (ε / 2) ^ 2 := by nlinarith [hx_im.1, hx_im.2]
+    nlinarith [sq_nonneg (x.re - p.re), sq_nonneg (x.im - p.im)]
+  · intro ⟨c, hc, hcU⟩
+    exact Filter.mem_of_superset (square_mem_nhds p hc.ne') hcU
 @[target]
 lemma square_subset_square {p : ℂ} {c₁ c₂ : ℝ} (hc₁ : 0 < c₁) (hc : c₁ ≤ c₂) :
-    Square p c₁ ⊆ Square p c₂ := by sorry
+    Square p c₁ ⊆ Square p c₂ := by
+  simp only [Square]
+  apply RectSubRect'
+  all_goals simp only [Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
+    Complex.neg_re, Complex.neg_im, Complex.mul_re, Complex.mul_im,
+    Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im,
+    mul_zero, mul_one, zero_mul, sub_zero, add_zero]
+  all_goals push_cast
+  all_goals linarith
 @[target]
 lemma SmallSquareInRectangle {z w p : ℂ} (pInRectInterior : Rectangle z w ∈ nhds p) :
-    ∀ᶠ (c : ℝ) in nhdsWithin 0 (Set.Ioi 0), Square p c ⊆ Rectangle z w := by sorry
+    ∀ᶠ (c : ℝ) in nhdsWithin 0 (Set.Ioi 0), Square p c ⊆ Rectangle z w := by
+  obtain ⟨δ, hδ, hδU⟩ := (Complex.nhds_hasBasis_square p).mem_iff.mp pInRectInterior
+  filter_upwards [Ioc_mem_nhdsGT_of_mem (show (0 : ℝ) ∈ Set.Ico 0 δ from ⟨le_refl _, hδ⟩)]
+    with c hc
+  exact (square_subset_square hc.1 hc.2).trans hδU
 
 -- Test: unique diagnostic lemma to verify submission detection
 private lemma _diagnostic_test_session_9182736455 : True := trivial
