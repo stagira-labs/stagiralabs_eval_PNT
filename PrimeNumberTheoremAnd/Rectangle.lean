@@ -61,7 +61,11 @@ lemma rectangle_in_convex {U : Set ℂ} (U_convex : Convex ℝ U) {z w : ℂ} (h
 lemma mem_Rect {z w : ℂ} (zRe_lt_wRe : z.re ≤ w.re) (zIm_lt_wIm : z.im ≤ w.im) (p : ℂ) :
     p ∈ Rectangle z w ↔ z.re ≤ p.re ∧ p.re ≤ w.re ∧ z.im ≤ p.im ∧ p.im ≤ w.im := by sorry
 @[target]
-lemma square_neg (p : ℂ) (c : ℝ) : Square p (-c) = Square p c := by sorry
+lemma square_neg (p : ℂ) (c : ℝ) : Square p (-c) = Square p c := by
+  simp only [Square]
+  rw [show -↑(-c) - ↑(-c) * I + p = ↑c + ↑c * I + p by push_cast; ring,
+      show ↑(-c) + ↑(-c) * I + p = -↑c - ↑c * I + p by push_cast; ring]
+  exact Rectangle.symm
 @[target]
 theorem Set.left_not_mem_uIoo {a b : ℝ} : a ∉ Set.uIoo a b := by
   rcases le_or_lt a b with h | h
@@ -81,7 +85,8 @@ theorem Set.ne_right_of_mem_uIoo {a b c : ℝ} (hc : c ∈ Set.uIoo a b) : c ≠
 @[target]
 lemma left_mem_rect (z w : ℂ) : z ∈ Rectangle z w := ⟨left_mem_uIcc, left_mem_uIcc⟩
 @[target]
-lemma right_mem_rect (z w : ℂ) : w ∈ Rectangle z w := by sorry
+lemma right_mem_rect (z w : ℂ) : w ∈ Rectangle z w := by
+  simp [Rectangle, mem_reProdIm, Set.right_mem_uIcc]
 @[target]
 lemma rect_subset_iff {z w z' w' : ℂ} :
     Rectangle z' w' ⊆ Rectangle z w ↔ z' ∈ Rectangle z w ∧ w' ∈ Rectangle z w := by sorry
@@ -95,13 +100,28 @@ lemma RectSubRect' {z₀ z₁ z₂ z₃ : ℂ} (x₀_le_x₁ : z₀.re ≤ z₁.
     (y₂_le_y₃ : z₂.im ≤ z₃.im) :
     Rectangle z₁ z₂ ⊆ Rectangle z₀ z₃ := by sorry
 @[target]
-lemma rectangleBorder_subset_rectangle (z w : ℂ) : RectangleBorder z w ⊆ Rectangle z w := by sorry
+lemma rectangleBorder_subset_rectangle (z w : ℂ) : RectangleBorder z w ⊆ Rectangle z w := by
+  intro p hp
+  simp only [RectangleBorder, mem_union, mem_reProdIm, mem_singleton_iff] at hp
+  simp only [Rectangle, mem_reProdIm]
+  rcases hp with (((⟨h1, h2⟩ | ⟨h1, h2⟩) | ⟨h1, h2⟩) | ⟨h1, h2⟩)
+  · exact ⟨h1, h2 ▸ Set.left_mem_uIcc⟩
+  · exact ⟨h1 ▸ Set.left_mem_uIcc, h2⟩
+  · exact ⟨h1, h2 ▸ Set.right_mem_uIcc⟩
+  · exact ⟨h1 ▸ Set.right_mem_uIcc, h2⟩
 /-- Note: try using `by simp` for `h`. -/
 @[target]
 lemma rectangle_disjoint_singleton {z w p : ℂ}
     (h : (p.re < z.re ∧ p.re < w.re) ∨ (p.im < z.im ∧ p.im < w.im) ∨
       (z.re < p.re ∧ w.re < p.re) ∨ (z.im < p.im ∧ w.im < p.im)) :
-    Disjoint (Rectangle z w) {p} := by sorry
+    Disjoint (Rectangle z w) {p} := by
+  rw [Set.disjoint_singleton_right]
+  simp only [Rectangle, mem_reProdIm, not_and_or]
+  rcases h with (⟨h1, h2⟩ | ⟨h1, h2⟩ | ⟨h1, h2⟩ | ⟨h1, h2⟩)
+  · left; exact Set.not_mem_uIcc_of_lt h1 h2
+  · right; exact Set.not_mem_uIcc_of_lt h1 h2
+  · left; exact Set.not_mem_uIcc_of_gt h1 h2
+  · right; exact Set.not_mem_uIcc_of_gt h1 h2
 @[target]
 lemma rectangleBorder_disjoint_singleton {z w p : ℂ}
     (h : p.re ≠ z.re ∧ p.re ≠ w.re ∧ p.im ≠ z.im ∧ p.im ≠ w.im) :
