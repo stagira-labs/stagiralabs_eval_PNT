@@ -67,7 +67,11 @@ theorem Set.left_not_mem_uIoo {a b : ℝ} : a ∉ Set.uIoo a b := by sorry
 @[target]
 theorem Set.right_not_mem_uIoo {a b : ℝ} : b ∉ Set.uIoo a b := by sorry
 @[target]
-theorem Set.ne_left_of_mem_uIoo {a b c : ℝ} (hc : c ∈ Set.uIoo a b) : c ≠ a := by sorry
+theorem Set.ne_left_of_mem_uIoo {a b c : ℝ} (hc : c ∈ Set.uIoo a b) : c ≠ a := by
+  intro h
+  rw [h] at hc
+  simp [Set.uIoo] at hc
+  exact lt_asymm hc.2 hc.1
 @[target]
 theorem Set.ne_right_of_mem_uIoo {a b c : ℝ} (hc : c ∈ Set.uIoo a b) : c ≠ b := by sorry
 @[target]
