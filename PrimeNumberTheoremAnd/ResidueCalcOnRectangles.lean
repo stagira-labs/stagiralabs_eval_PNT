@@ -321,7 +321,11 @@ lemma Complex.inv_re_add_im : (x + y * I)⁻¹ = (x - I * y) / (x ^ 2 + y ^ 2) :
     <;> ring
     <;> simp
 @[target]
-lemma sq_add_sq_ne_zero (hy : y ≠ 0) : x ^ 2 + y ^ 2 ≠ 0 := by sorry
+lemma sq_add_sq_ne_zero (hy : y ≠ 0) : x ^ 2 + y ^ 2 ≠ 0 := by
+  intro h
+  have : y ^ 2 = 0 := by
+    nlinarith [sq_nonneg x]
+  exact hy (by simpa using this)
 @[target]
 lemma continuous_self_div_sq_add_sq (hy : y ≠ 0) : Continuous fun x => x / (x ^ 2 + y ^ 2) := by
   apply Continuous.div continuous_id
