@@ -59,7 +59,9 @@ lemma rectangle_in_convex {U : Set ℂ} (U_convex : Convex ℝ U) {z w : ℂ} (h
     Rectangle z w ⊆ U := by sorry
 @[target]
 lemma mem_Rect {z w : ℂ} (zRe_lt_wRe : z.re ≤ w.re) (zIm_lt_wIm : z.im ≤ w.im) (p : ℂ) :
-    p ∈ Rectangle z w ↔ z.re ≤ p.re ∧ p.re ≤ w.re ∧ z.im ≤ p.im ∧ p.im ≤ w.im := by sorry
+    p ∈ Rectangle z w ↔ z.re ≤ p.re ∧ p.re ≤ w.re ∧ z.im ≤ p.im ∧ p.im ≤ w.im := by
+  simp only [Rectangle, reProdIm, Set.mem_preimage, Set.mem_setOf_eq, Set.mem_inter_iff]
+  simp [uIcc, Set.mem_Icc, zRe_lt_wRe, zIm_lt_wIm, and_assoc]
 @[target]
 lemma square_neg (p : ℂ) (c : ℝ) : Square p (-c) = Square p c := by sorry
 @[target]
