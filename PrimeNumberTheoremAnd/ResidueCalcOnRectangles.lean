@@ -290,7 +290,13 @@ lemma Complex.inv_re_add_im : (x + y * I)⁻¹ = (x - I * y) / (x ^ 2 + y ^ 2) :
 @[target]
 lemma sq_add_sq_ne_zero (hy : y ≠ 0) : x ^ 2 + y ^ 2 ≠ 0 := by sorry
 @[target]
-lemma continuous_self_div_sq_add_sq (hy : y ≠ 0) : Continuous fun x => x / (x ^ 2 + y ^ 2) := by sorry
+lemma continuous_self_div_sq_add_sq (hy : y ≠ 0) : Continuous fun x => x / (x ^ 2 + y ^ 2) := by
+  apply Continuous.div continuous_id
+  · apply Continuous.add (continuous_pow 2) continuous_const
+  · intro x
+    have : 0 < y ^ 2 := by positivity
+    have : 0 ≤ x ^ 2 := by positivity
+    nlinarith
 @[target]
 lemma integral_self_div_sq_add_sq (hy : y ≠ 0) : ∫ x in x₁..x₂, x / (x ^ 2 + y ^ 2) =
     Real.log (x₂ ^ 2 + y ^ 2) / 2 - Real.log (x₁ ^ 2 + y ^ 2) / 2 := by sorry
