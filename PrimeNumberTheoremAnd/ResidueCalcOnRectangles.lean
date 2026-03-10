@@ -286,7 +286,28 @@ theorem RectangleIntegral.translate (f : ℂ → E) (z w p : ℂ) :
 theorem RectangleIntegral.translate' (f : ℂ → E) (z w p : ℂ) :
     RectangleIntegral' (fun s => f (s - p)) z w = RectangleIntegral' f (z - p) (w - p) := by sorry
 @[target]
-lemma Complex.inv_re_add_im : (x + y * I)⁻¹ = (x - I * y) / (x ^ 2 + y ^ 2) := by sorry
+lemma Complex.inv_re_add_im : (x + y * I)⁻¹ = (x - I * y) / (x ^ 2 + y ^ 2) := by
+  -- Use the standard complex inverse formula
+  by_cases h : x = 0 ∧ y = 0
+  · simp [h]
+  · have hne : x + y * I ≠ 0 := by
+      intro h2
+      simp [Complex.ext_iff] at h2
+      exact h ⟨h2.1, h2.2⟩
+    -- normSq (x + y*I) = x^2 + y^2
+    have normSq_eq : normSq (x + y * I) = (x ^ 2 + y ^ 2 : ℝ) := by
+      simp [Complex.normSq, pow_two]
+      <;> ring
+    -- Use Complex.inv_def which says z⁻¹ = ⟨x, -y⟩ / normSq(z)
+    rw [Complex.inv_def]
+    simp [normSq_eq, Complex.ext_iff, pow_two]
+    <;> field_simp [hne]
+    <;> ring_nf
+    <;> simp [Complex.ext_iff, pow_two]
+    <;> norm_num
+    <;> field_simp [hne]
+    <;> ring
+    <;> simp
 @[target]
 lemma sq_add_sq_ne_zero (hy : y ≠ 0) : x ^ 2 + y ^ 2 ≠ 0 := by sorry
 @[target]
