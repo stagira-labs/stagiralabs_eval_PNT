@@ -79,9 +79,32 @@ theorem Set.left_not_mem_uIoo {a b : ℝ} : a ∉ Set.uIoo a b := by
 @[target]
 theorem Set.right_not_mem_uIoo {a b : ℝ} : b ∉ Set.uIoo a b := by sorry
 @[target]
-theorem Set.ne_left_of_mem_uIoo {a b c : ℝ} (hc : c ∈ Set.uIoo a b) : c ≠ a := by sorry
+theorem Set.ne_left_of_mem_uIoo {a b c : ℝ} (hc : c ∈ Set.uIoo a b) : c ≠ a := by
+  simp only [Set.uIoo, Set.mem_Ioo] at hc
+  intro h
+  rw [h] at hc
+  -- hc: a ⊓ b < a ∧ a < a ⊔ b
+  cases' le_total a b with hab hab
+  · -- a ≤ b, so a ⊓ b = a
+    rw [inf_eq_left.mpr hab, sup_eq_right.mpr hab] at hc
+    exact lt_irrefl a hc.1
+  · -- b ≤ a, so a ⊔ b = a
+    rw [inf_eq_right.mpr hab, sup_eq_left.mpr hab] at hc
+    exact lt_irrefl a hc.2
+
 @[target]
-theorem Set.ne_right_of_mem_uIoo {a b c : ℝ} (hc : c ∈ Set.uIoo a b) : c ≠ b := by sorry
+theorem Set.ne_right_of_mem_uIoo {a b c : ℝ} (hc : c ∈ Set.uIoo a b) : c ≠ b := by
+  simp only [Set.uIoo, Set.mem_Ioo] at hc
+  intro h
+  rw [h] at hc
+  -- hc: b ⊓ b < b ∧ b < b ⊔ b
+  cases' le_total a b with hab hab
+  · -- a ≤ b, so a ⊔ b = b
+    rw [inf_eq_left.mpr hab, sup_eq_right.mpr hab] at hc
+    exact lt_irrefl b hc.2
+  · -- b ≤ a, so b ⊓ a = b
+    rw [inf_eq_right.mpr hab, sup_eq_left.mpr hab] at hc
+    exact lt_irrefl b hc.1
 @[target]
 lemma left_mem_rect (z w : ℂ) : z ∈ Rectangle z w := by
   simp [Rectangle]; constructor <;> simp
