@@ -24,9 +24,14 @@ noncomputable def HIntegral' (f : ℂ → E) (x₁ x₂ y : ℝ) : E := (1 / (2 
 noncomputable def VIntegral' (f : ℂ → E) (x y₁ y₂ : ℝ) : E :=  (1 / (2 * π * I)) • VIntegral f x y₁ y₂
 
 @[target]
-lemma HIntegral_symm : HIntegral f x₁ x₂ y = - HIntegral f x₂ x₁ y := by sorry
+lemma HIntegral_symm : HIntegral f x₁ x₂ y = - HIntegral f x₂ x₁ y := by
+  dsimp [HIntegral]
+  rw [intervalIntegral.integral_symm]
 @[target]
-lemma VIntegral_symm : VIntegral f x y₁ y₂ = - VIntegral f x y₂ y₁ := by sorry
+lemma VIntegral_symm : VIntegral f x y₁ y₂ = - VIntegral f x y₂ y₁ := by
+  dsimp [VIntegral]
+  rw [intervalIntegral.integral_symm]
+  simp [neg_smul]
 /-%%
 \begin{definition}[RectangleIntegral]\label{RectangleIntegral}\lean{RectangleIntegral}\leanok
 A RectangleIntegral of a function $f$ is one over a rectangle determined by $z$ and $w$ in $\C$.
@@ -138,7 +143,14 @@ theorem RectangleIntegral'_congr (h : Set.EqOn f g (RectangleBorder z w)) :
     RectangleIntegral' f z w = RectangleIntegral' g z w := by sorry
 @[target]
 theorem rectangleIntegral_symm (f : ℂ → E) (z w : ℂ) :
-    RectangleIntegral f z w = RectangleIntegral f w z := by sorry
+    RectangleIntegral f z w = RectangleIntegral f w z := by
+  dsimp [RectangleIntegral]
+  have h1 : HIntegral f w.re z.re w.im = -HIntegral f z.re w.re w.im := by rw [HIntegral_symm]
+  have h2 : HIntegral f z.re w.re z.im = -HIntegral f w.re z.re z.im := by rw [HIntegral_symm]
+  have h3 : VIntegral f z.re w.im z.im = -VIntegral f z.re z.im w.im := by rw [VIntegral_symm]
+  have h4 : VIntegral f w.re w.im z.im = -VIntegral f w.re z.im w.im := by rw [VIntegral_symm]
+  rw [h1, h2, h3, h4]
+  simp [sub_eq_add_neg, add_assoc, add_comm, add_left_comm]
 @[target]
 theorem rectangleIntegral_symm_re (f : ℂ → E) (z w : ℂ) :
     RectangleIntegral f (w.re + z.im * I) (z.re + w.im * I) = - RectangleIntegral f z w := by sorry
