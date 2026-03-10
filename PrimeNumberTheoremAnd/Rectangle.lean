@@ -36,7 +36,9 @@ def Square (p : ℂ) (c : ℝ) : Set ℂ := Rectangle (-c - c * I + p) (c + c * 
 
 @[target]
 lemma Square_apply (p : ℂ) (cpos : c > 0) :
-    Square p c = Icc (-c + p.re) (c + p.re) ×ℂ Icc (-c + p.im) (c + p.im) := by sorry
+    Square p c = Icc (-c + p.re) (c + p.re) ×ℂ Icc (-c + p.im) (c + p.im) := by
+  simp [Square, Complex.Rectangle]
+  rw [uIcc_of_le (by linarith), uIcc_of_le (by linarith)]
 @[target, simp]
 theorem preimage_equivRealProdCLM_reProdIm (s t : Set ℝ) :
     equivRealProdCLM.symm ⁻¹' (s ×ℂ t) = s ×ˢ t := by sorry
