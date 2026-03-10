@@ -287,7 +287,16 @@ theorem ResidueTheoremAtOrigin_aux2c' (a b : ℝ) :
     IntervalIntegrable f volume a b := by sorry
 @[target]
 theorem RectangleIntegral.const_smul (f : ℂ → E) (z w c : ℂ) :
-    RectangleIntegral (fun s => c • f s) z w = c • RectangleIntegral f z w := by sorry
+    RectangleIntegral (fun s => c • f s) z w = c • RectangleIntegral f z w := by
+  dsimp [RectangleIntegral, HIntegral, VIntegral]
+  simp [intervalIntegral.integral_smul_const]
+  -- The goal is to show that c factors out of the entire expression
+  -- Use the fact that scalar multiplication is linear
+  rw [smul_sub, smul_add, smul_sub]
+  -- Now the goal is to show I • c • X = c • I • X
+  -- This follows from commutativity of scalar multiplication in a module over a commutative ring
+  simp [smul_smul, mul_comm]
+  <;> ring_nf
 @[target]
 theorem RectangleIntegral.const_mul' (f : ℂ → E) (z w c : ℂ) :
     RectangleIntegral' (fun s => c • f s) z w = c • RectangleIntegral' f z w := by sorry
