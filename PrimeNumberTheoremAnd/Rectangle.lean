@@ -63,7 +63,13 @@ lemma mem_Rect {z w : ℂ} (zRe_lt_wRe : z.re ≤ w.re) (zIm_lt_wIm : z.im ≤ w
   simp only [Rectangle, reProdIm, Set.mem_preimage, Set.mem_setOf_eq, Set.mem_inter_iff]
   simp [uIcc, Set.mem_Icc, zRe_lt_wRe, zIm_lt_wIm, and_assoc]
 @[target]
-lemma square_neg (p : ℂ) (c : ℝ) : Square p (-c) = Square p c := by sorry
+lemma square_neg (p : ℂ) (c : ℝ) : Square p (-c) = Square p c := by
+  simp [Square]
+  -- Need to show: (-c + -(c*I) + p) = (-c - c*I + p)
+  -- Then use Rectangle.symm
+  have h : (-c + -(c * I) + p : ℂ) = (-c - c * I + p) := by ring
+  rw [h]
+  rw [Rectangle.symm]
 @[target]
 theorem Set.left_not_mem_uIoo {a b : ℝ} : a ∉ Set.uIoo a b := by
   intro h
@@ -77,7 +83,10 @@ theorem Set.left_not_mem_uIoo {a b : ℝ} : a ∉ Set.uIoo a b := by
     rw [inf_eq_right.mpr hab, sup_eq_left.mpr hab] at h
     exact lt_irrefl a h.2
 @[target]
-theorem Set.right_not_mem_uIoo {a b : ℝ} : b ∉ Set.uIoo a b := by sorry
+theorem Set.right_not_mem_uIoo {a b : ℝ} : b ∉ Set.uIoo a b := by
+  intro h
+  simp [Set.uIoo, Set.mem_setOf_eq] at h
+  exact lt_asymm h.1 h.2
 @[target]
 theorem Set.ne_left_of_mem_uIoo {a b c : ℝ} (hc : c ∈ Set.uIoo a b) : c ≠ a := by
   simp only [Set.uIoo, Set.mem_Ioo] at hc
@@ -91,7 +100,6 @@ theorem Set.ne_left_of_mem_uIoo {a b c : ℝ} (hc : c ∈ Set.uIoo a b) : c ≠ 
   · -- b ≤ a, so a ⊔ b = a
     rw [inf_eq_right.mpr hab, sup_eq_left.mpr hab] at hc
     exact lt_irrefl a hc.2
-
 @[target]
 theorem Set.ne_right_of_mem_uIoo {a b c : ℝ} (hc : c ∈ Set.uIoo a b) : c ≠ b := by
   simp only [Set.uIoo, Set.mem_Ioo] at hc
@@ -109,7 +117,9 @@ theorem Set.ne_right_of_mem_uIoo {a b c : ℝ} (hc : c ∈ Set.uIoo a b) : c ≠
 lemma left_mem_rect (z w : ℂ) : z ∈ Rectangle z w := by
   simp [Rectangle]; constructor <;> simp
 @[target]
-lemma right_mem_rect (z w : ℂ) : w ∈ Rectangle z w := by sorry
+lemma right_mem_rect (z w : ℂ) : w ∈ Rectangle z w := by
+  simp [Rectangle, Set.mem_setOf_eq]
+  <;> constructor <;> simp [le_refl]
 @[target]
 lemma rect_subset_iff {z w z' w' : ℂ} :
     Rectangle z' w' ⊆ Rectangle z w ↔ z' ∈ Rectangle z w ∧ w' ∈ Rectangle z w := by sorry
