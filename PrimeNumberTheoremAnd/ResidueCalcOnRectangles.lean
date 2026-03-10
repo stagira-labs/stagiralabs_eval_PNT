@@ -297,20 +297,6 @@ theorem RectangleIntegral.const_smul (f : ℂ → E) (z w c : ℂ) :
   -- This follows from commutativity of scalar multiplication in a module over a commutative ring
   simp [smul_smul, mul_comm]
   <;> ring_nf
-  dsimp [RectangleIntegral, HIntegral, VIntegral]
-  simp [intervalIntegral.integral_smul_const]
-  -- The goal is to show that c factors out of the entire expression
-  -- Use the fact t
-  -- Use the fact that scalar multiplication is linear
-  rw [smul_sub, smul_add, smul_sub]
-  -- Now the goal is to show I • c • X = c • I • X
-  -- This follows from commutativity of scala
-  -- This follows from commutativity of scalar multiplication in a module over a commutative ring
-  simp [smul_smul, mul_comm]
-  <;> ring_nf
-@[target]
-theorem RectangleIntegral.const_mul' (f : ℂ → E) (z w c : ℂ) :
-    Rectang
 @[target]
 theorem RectangleIntegral.const_mul' (f : ℂ → E) (z w c : ℂ) :
     RectangleIntegral' (fun s => c • f s) z w = c • RectangleIntegral' f z w := by sorry
@@ -333,14 +319,13 @@ lemma Complex.inv_re_add_im : (x + y * I)⁻¹ = (x - I * y) / (x ^ 2 + y ^ 2) :
     have normSq_eq : normSq (x + y * I) = (x ^ 2 + y ^ 2 : ℝ) := by
       simp [Complex.normSq, pow_two]
       <;> ring
-    -- Use C
+    -- Use Complex.inv_def which says z⁻¹ = ⟨x, -y⟩ / normSq(z)
     rw [Complex.inv_def]
     simp [normSq_eq, Complex.ext_iff, pow_two]
     <;> field_simp [hne]
     <;> ring_nf
     <;> simp [Complex.ext_iff, pow_two]
     <;> norm_num
-    <;> field_s
     <;> field_simp [hne]
     <;> ring
     <;> simp
@@ -348,31 +333,36 @@ lemma Complex.inv_re_add_im : (x + y * I)⁻¹ = (x - I * y) / (x ^ 2 + y ^ 2) :
 lemma sq_add_sq_ne_zero (hy : y ≠ 0) : x ^ 2 + y ^ 2 ≠ 0 := by
   intro h
   have : y ^ 2 = 0 := by
-    nlinarith
+    nlinarith [sq_nonneg x]
   exact hy (by simpa using this)
 @[target]
-lemma continuous_self_div_sq_add_sq (hy : y ≠ 0) : Continuous fun x => x / (x
+lemma continuous_self_div_sq_add_sq (hy : y ≠ 0) : Continuous fun x => x / (x ^ 2 + y ^ 2) := by
   apply Continuous.div continuous_id
   · apply Continuous.add (continuous_pow 2) continuous_const
   · intro x
     have : 0 < y ^ 2 := by positivity
-    have : 0 < y ^ 2 := by positivity
     have : 0 ≤ x ^ 2 := by positivity
     nlinarith
 @[target]
-lemma integral_self_div_sq_add_sq (hy : y ≠ 0) : 
 lemma integral_self_div_sq_add_sq (hy : y ≠ 0) : ∫ x in x₁..x₂, x / (x ^ 2 + y ^ 2) =
     Real.log (x₂ ^ 2 + y ^ 2) / 2 - Real.log (x₁ ^ 2 + y ^ 2) / 2 := by sorry
 @[target]
-lemma integral_const_div_sq_add_sq (hy : y ≠ 0) : ∫ x in x₁..x₂, 
+lemma integral_const_div_sq_add_sq (hy : y ≠ 0) : ∫ x in x₁..x₂, y / (x ^ 2 + y ^ 2) =
     arctan (x₂ / y) - arctan (x₁ / y) := by sorry
 @[target]
-lemma integral_const_div_self_add_im (hy : y ≠ 0) : ∫ x : ℝ in x₁..x
+lemma integral_const_div_self_add_im (hy : y ≠ 0) : ∫ x : ℝ in x₁..x₂, A / (x + y * I) =
     A * (Real.log (x₂ ^ 2 + y ^ 2) / 2 - Real.log (x₁ ^ 2 + y ^ 2) / 2) -
     A * I * (arctan (x₂ / y) - arctan (x₁ / y)) := by sorry
 @[target]
 lemma integral_const_div_re_add_self (hx : x ≠ 0) : ∫ y : ℝ in y₁..y₂, A / (x + y * I) =
-    A 
+    A / I * (Real.log (y₂ ^ 2 + (-x) ^ 2) / 2 - Real.log (y₁ ^ 2 + (-x) ^ 2) / 2) -
+    A / I * I * (arctan (y₂ / -x) - arctan (y₁ / -x)) := by sorry
+@[target]
+lemma ResidueTheoremAtOrigin' {z w c : ℂ} (h1 : z.re < 0) (h2 : z.im < 0) (h3 : 0 < w.re) (h4 : 0 < w.im) :
+    RectangleIntegral (λ s => c / s) z w = 2 * I * π * c := by sorry
+@[target]
+theorem ResidueTheoremInRectangle (zRe_le_wRe : z.re ≤ w.re) (zIm_le_wIm : z.im ≤ w.im)
+    (pInRectInterior : Rectangle z w ∈ 𝓝 p) : RectangleIntegral' (λ s => c / (s - p)) z w = c := by sorry
 /-%%
 \begin{lemma}[ResidueTheoremAtOrigin]\label{ResidueTheoremAtOrigin}
 \lean{ResidueTheoremAtOrigin}\leanok
@@ -380,8 +370,7 @@ The rectangle (square) integral of $f(s) = 1/s$ with corners $-1-i$ and $1+i$ is
 \end{lemma}
 %%-/
 @[target]
-theorem ResidueTheoremInRectangle (zRe_le_wRe : z.re ≤ w.re) (zIm_le_wIm : z.im ≤ w.im)
-    (pInRe
+lemma ResidueTheoremAtOrigin : RectangleIntegral' (fun s ↦ 1 / s) (-1 - I) (1 + I) = 1 := by sorry
 /-%%
 \begin{proof}\leanok
 This is a special case of the more general result above.
@@ -397,15 +386,13 @@ rectangle is $A$.
 \end{lemma}
 %%-/
 -- TODO: generalize to `f g : ℂ → E`
-/-%%
-\begin{lemma}[ResidueTheoremOnRectangleWithSimplePole]\label{ResidueTheoremOnRectangleWithSimplePole}
-\lean{ResidueTheoremOnRectangleWithSimplePole}\leanok
-Suppose that $f$ is a holomorphic function on a rectangle, except for a simple pole
-at $p$. By the latter, we mean that there is a function $g$ holomorphic on the rectangle such that, $f = g + A/(s-p)$ for some $A\in\C$. Then the integral of $f$ over the
-rectangle is $A$.
-\end{lemma}
-%%-/
--- TODO: generalize to `f g
+@[target]
+lemma ResidueTheoremOnRectangleWithSimplePole {f g : ℂ → ℂ} {z w p A : ℂ}
+    (zRe_le_wRe : z.re ≤ w.re) (zIm_le_wIm : z.im ≤ w.im)
+    (pInRectInterior : Rectangle z w ∈ 𝓝 p)
+    (gHolo : HolomorphicOn g (Rectangle z w))
+    (principalPart : Set.EqOn (f - fun s ↦ A / (s - p)) (g) (Rectangle z w \ {p})) :
+    RectangleIntegral' f z w = A := by sorry
 /-%%
 \begin{proof}
 \uses{ResidueTheoremAtOrigin, RectanglePullToNhdOfPole, HolomorphicOn.vanishesOnRectangle}
