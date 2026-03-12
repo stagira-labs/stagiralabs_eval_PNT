@@ -63,9 +63,17 @@ lemma mem_Rect {z w : ℂ} (zRe_lt_wRe : z.re ≤ w.re) (zIm_lt_wIm : z.im ≤ w
 @[target]
 lemma square_neg (p : ℂ) (c : ℝ) : Square p (-c) = Square p c := by sorry
 @[target]
-theorem Set.left_not_mem_uIoo {a b : ℝ} : a ∉ Set.uIoo a b := by sorry
+theorem Set.left_not_mem_uIoo {a b : ℝ} : a ∉ Set.uIoo a b := by
+  intro h
+  simp only [Set.uIoo, Set.mem_Ioo] at h
+  have : min a b < a := h.1
+  exact lt_irrefl a (by cases le_total a b <;> simp_all [min_eq_left, min_eq_right])
 @[target]
-theorem Set.right_not_mem_uIoo {a b : ℝ} : b ∉ Set.uIoo a b := by sorry
+theorem Set.right_not_mem_uIoo {a b : ℝ} : b ∉ Set.uIoo a b := by
+  intro h
+  simp only [Set.uIoo, Set.mem_Ioo] at h
+  have : b < max a b := h.2
+  exact lt_irrefl b (by cases le_total a b <;> simp_all [max_eq_left, max_eq_right])
 @[target]
 theorem Set.ne_left_of_mem_uIoo {a b c : ℝ} (hc : c ∈ Set.uIoo a b) : c ≠ a := by sorry
 @[target]
